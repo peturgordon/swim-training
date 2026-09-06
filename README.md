@@ -4,7 +4,7 @@ An evidence-checked masters swim training project: research on technique, endura
 
 ## Guides
 
-- **[Garpar Training Audit](guides/garpar-training-audit.html)** — research findings cross-referenced against a full season's training log, with a gap analysis and a recommended 3-session weekly framework.
+- **[Training Framework](guides/training-framework.html)** — research findings cross-referenced against a full season's training log, with a gap analysis and a recommended 3-session weekly framework.
 - **[The Returning Swimmer](guides/returning-swimmer-guide.html)** — a simpler mental-model guide for a former competitive swimmer returning after a long hiatus: three engines, session/week/season structure, a steady-state protocol, do/avoid lists.
 
 > These are static HTML files — GitHub renders them as source code, not as pages, unless viewed through GitHub Pages. See "Publishing" below.
@@ -26,4 +26,4 @@ See [WORKFLOW.md](WORKFLOW.md) for the full step-by-step process — how a pract
 
 ## Publishing
 
-To make the HTML guides render as actual pages instead of source code, enable **GitHub Pages** for this repo (Settings → Pages → deploy from the `main` branch, root folder) once it's pushed. The guides would then be reachable at `https://<username>.github.io/<repo>/guides/garpar-training-audit.html`, etc.
+To make the HTML guides render as actual pages instead of source code, enable **GitHub Pages** for this repo (Settings → Pages → deploy from the `main` branch, root folder) once it's pushed. The guides would then be reachable at `https://<username>.github.io/<repo>/guides/training-framework.html`, etc.

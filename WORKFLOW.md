@@ -8,7 +8,7 @@ A step-by-step reference for how this project actually runs — usable by a futu
 
 ## 2. How a practice session gets generated
 
-1. Start from the framework in `guides/garpar-training-audit.html` — it defines three session archetypes (technique + aerobic base / speed-bridge / race-distance-endurance) and the principles behind them (polarized effort distribution, technique-fresh-before-fatigue, real recovery for max effort, etc.).
+1. Start from the framework in `guides/training-framework.html` — it defines three session archetypes (technique + aerobic base / speed-bridge / race-distance-endurance) and the principles behind them (polarized effort distribution, technique-fresh-before-fatigue, real recovery for max effort, etc.).
 2. Apply whatever the user specifies for that day: which archetype, time cap, distance cap, any equipment notes.
 3. Write the session using this section order and style (see `practices/2026-09-05.md` or `practices/2026-09-07.md` for real examples):
    - `# YYYY-MM-DD — <session name>`, then total time/distance

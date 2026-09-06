@@ -4,7 +4,7 @@ An evidence-checked masters swim training project: research on technique, endura
 
 ## Guides
 
-- **[Garpar Training Audit](guides/garpar-training-audit.html)** — research findings cross-referenced against a full season's training log, with a gap analysis and a recommended 3-session weekly framework.
+- **[Training Framework](guides/training-framework.html)** — research findings cross-referenced against a full season's training log, with a gap analysis and a recommended 3-session weekly framework.
 - **[The Returning Swimmer](guides/returning-swimmer-guide.html)** — a simpler mental-model guide for a former competitive swimmer returning after a long hiatus: three engines, session/week/season structure, a steady-state protocol, do/avoid lists.
 
 ## Research
