@@ -35,3 +35,25 @@ git push
 Live site: **https://peturgordon.github.io/swim-training/** (root and `practices/` both need their own `index.md` — GitHub Pages has no automatic directory listing, so any new top-level section needs one too).
 
 Repo: **https://github.com/peturgordon/swim-training**
+
+## 4. If something sensitive gets committed and pushed by mistake
+
+Editing the file and committing the fix is **not enough** — the old version is still sitting in an earlier commit, fully recoverable by anyone who checks it out, even after the file looks clean on the latest commit. This happened once already (a name, an email, and a local file path in `WORKFLOW.md`; a coach's name in the training log) and needed a full fix, not just a new commit on top:
+
+1. Search **all of history**, not just the current files, for every term of concern:
+   ```bash
+   git log --all --source --oneline -S"<exact string>" -- .
+   ```
+2. Rewrite it out of history:
+   - Wrong only in commit author/email → `git filter-branch -f --env-filter '...'`
+   - Wrong in a file's actual text → `git filter-branch -f --tree-filter '...'` (small repo, fine for a handful of commits)
+3. Clean up what the rewrite leaves behind, or the old data is still locally recoverable:
+   ```bash
+   rm -rf .git/refs/original
+   git reflog expire --expire=now --all
+   git gc --prune=now --aggressive
+   ```
+4. Re-run the same `git log -S` search from step 1 — expect nothing back — before trusting it's fixed.
+5. `git push --force origin main` to overwrite what's already public.
+
+**Limit of this fix:** anyone who cloned or forked the repo before the rewrite still has the old data. A force-push only overwrites the copy on GitHub's servers, not copies that already left it.
