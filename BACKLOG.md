@@ -22,15 +22,11 @@ Idea: a simple page (could just become the main content of [`index.md`](index.md
 
 [Training Framework's tracking section](guides/training-framework.html#tracking) already recommends what to record (stroke count, CSS, heart rate, RPE, SWOLF) but assumes some way to actually capture it mid-session — and that part is unsolved. Pen and paper doesn't survive pool water, and relying on memory for exact numbers (stroke counts per rep, split times) after a hard set isn't reliable.
 
-Open questions: what's the actual poolside capture method — a waterproof slate/grease pencil left at the wall, a swim-tracking smartwatch (would automate distance/pace/stroke-count capture entirely for some metrics, removing manual recording), voice-memoing onto a phone immediately after each set, or a training partner noting things down? And which metrics can reasonably be reconstructed from memory right after the session (overall RPE, how a set felt) versus which need to be captured the instant they happen (stroke count per length, exact splits)?
+The "how" side is now researched and answered — see [`research/poolside_tools.md`](research/poolside_tools.md) (waterproof slates, swim-tracking smartwatches, smart goggles, voice memo, training partner, and which metrics need instant capture vs. survive memory). Still open: actually picking one and adopting it in practice — the research lays out options, it doesn't make the choice for Petur.
 
 ## A CSV (or similar) schema for aggregating metrics over the season
 
 The plan is to capture metrics poolside somehow (see above), then periodically aggregate results into a CSV or similar in this repo to track progress over the season — but nothing defines what that file looks like yet: no fixed column names, no location, no process for turning a practice file's prose "Metrics to capture" section into a structured row. Each archetype tracks different things (stroke count for Technique/Race Distance days, RPE/pulse for Speed Bridge days), so the schema needs to accommodate that rather than force one flat table. Worth settling column names and format before there are several weeks of inconsistently-worded entries to reconcile by hand.
-
-## Research: poolside recording methods and waterproof stopwatch/watch options
-
-Requested but not yet done — blocked on this session's web search budget being fully exhausted. Needs a fresh Claude Code session (gets its own search budget) to actually run: a proper, sourced research pass on (1) practical ways to record measurements while actually in the water, and (2) waterproof/water-resistant stopwatch and swim-tracking watch options for timing. Should resolve the "how" side of the [poolside metrics capture](#practical-metrics-capture-at-poolside) item above, get written up the same way as [`research/research_findings.md`](research/research_findings.md) (confidence-tagged, sourced, not just recalled product specs), and linked from the homepage.
 
 ## Evolving the training over the season
 
