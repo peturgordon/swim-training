@@ -24,6 +24,14 @@ Idea: a simple page (could just become the main content of [`index.md`](index.md
 
 Open questions: what's the actual poolside capture method — a waterproof slate/grease pencil left at the wall, a swim-tracking smartwatch (would automate distance/pace/stroke-count capture entirely for some metrics, removing manual recording), voice-memoing onto a phone immediately after each set, or a training partner noting things down? And which metrics can reasonably be reconstructed from memory right after the session (overall RPE, how a set felt) versus which need to be captured the instant they happen (stroke count per length, exact splits)?
 
+## A CSV (or similar) schema for aggregating metrics over the season
+
+The plan is to capture metrics poolside somehow (see above), then periodically aggregate results into a CSV or similar in this repo to track progress over the season — but nothing defines what that file looks like yet: no fixed column names, no location, no process for turning a practice file's prose "Metrics to capture" section into a structured row. Each archetype tracks different things (stroke count for Technique/Race Distance days, RPE/pulse for Speed Bridge days), so the schema needs to accommodate that rather than force one flat table. Worth settling column names and format before there are several weeks of inconsistently-worded entries to reconcile by hand.
+
+## Research: poolside recording methods and waterproof stopwatch/watch options
+
+Requested but not yet done — blocked on this session's web search budget being fully exhausted. Needs a fresh Claude Code session (gets its own search budget) to actually run: a proper, sourced research pass on (1) practical ways to record measurements while actually in the water, and (2) waterproof/water-resistant stopwatch and swim-tracking watch options for timing. Should resolve the "how" side of the [poolside metrics capture](#practical-metrics-capture-at-poolside) item above, get written up the same way as [`research/research_findings.md`](research/research_findings.md) (confidence-tagged, sourced, not just recalled product specs), and linked from the homepage.
+
 ## Evolving the training over the season
 
 How should sessions change as fitness genuinely improves — raising the distance cap, tightening target paces, shifting the effort-zone balance — separate from what happens if a target meet or endurance event gets added to the calendar? [Training Framework](guides/training-framework.html#framework)'s own principle 6 (train in blocks, not a straight line) and its "meet calendar" open question already flag the meet-driven side of this as an acknowledged evidence gap. This is the broader version: ongoing progression logic even with no meet in sight, and how the CSS retest already recommended every 6–8 weeks should actually feed back into adjusting the framework, rather than just being logged and left there.
