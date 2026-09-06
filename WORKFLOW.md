@@ -36,6 +36,8 @@ git commit -m "short description"
 git push
 ```
 
+**Automated check, after every push:** [`.github/workflows/check-links.yml`](.github/workflows/check-links.yml) runs [`scripts/check-links.sh`](scripts/check-links.sh), which verifies every `practices/*.md` file is linked from `practices/index.md`, and every internal (non-`http`) link across every `.md`/`.html` file in the repo resolves to a real file. It does **not** check external citation links (deliberately — too slow/flaky against third-party sites to run on every push) and it does **not** block the push itself (GitHub Actions run after a push completes) — a failure shows as a red ❌ on the commit at github.com, not a rejected push. Run it locally before pushing with `bash scripts/check-links.sh` from the repo root to catch the same thing immediately instead of waiting to notice the commit status.
+
 Live site: **https://peturgordon.github.io/swim-training/** (root and [`practices/`](practices/) both need their own `index.md` — GitHub Pages has no automatic directory listing, so any new top-level section needs one too).
 
 Repo: **https://github.com/peturgordon/swim-training**

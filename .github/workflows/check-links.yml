@@ -1,0 +1,14 @@
+name: Check links and practices index
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run link and practices-index checks
+        run: bash scripts/check-links.sh
