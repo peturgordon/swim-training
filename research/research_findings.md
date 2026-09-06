@@ -229,7 +229,7 @@ No claims addressing running/strength-training progression-rate literature (the 
 
 ## Cross-check against an independent Gemini research pass (2026-08-27)
 
-The user separately asked Google Gemini to research the same topic (masters-swim training framework, 40+ returning competitive swimmers, 3x/week). Gemini produced a 21-page framework document with 56 citations, exported as PDF to `research/gemini/gemini-masters-swim-training-framework.pdf`. It was reviewed against this research corpus and published as **[Second Opinion](https://claude.ai/code/artifact/dd30041a-2d1a-4621-8981-10dd334dab26)** (local backup: `guides/second-opinion.html`).
+The user separately asked Google Gemini to research the same topic (masters-swim training framework, 40+ returning competitive swimmers, 3x/week). Gemini produced a 21-page framework document with 56 citations, exported as PDF to `research/gemini/gemini-masters-swim-training-framework.pdf`. It was reviewed against this research corpus and published as **[Second Opinion](https://claude.ai/code/artifact/dd30041a-2d1a-4621-8981-10dd334dab26)** (local backup: `research/gemini/second-opinion.html`).
 
 Headline findings from that cross-check:
 - **Genuine convergence** on CSS methodology, the 3-day aerobic/threshold/sprint weekly split, technique-before-fatigue sequencing, and the core tracking metrics — independent agreement that strengthens confidence in all four.
@@ -267,7 +267,7 @@ Both artifacts republished at their existing URLs; local HTML backups refreshed.
 
 - **[Garpar Training Audit](https://claude.ai/code/artifact/eee8fa7b-3e1c-4eac-999d-95b2ed14c9d4)** — this research cross-referenced against a full read of the 65-session `garpar_sundaefingar_2025-2026.md` log, with a gap analysis and a 3-session weekly framework. Local backup: `guides/garpar-training-audit.html`.
 - **[The Returning Swimmer](https://claude.ai/code/artifact/43f6b25f-945e-4ee3-ac15-2f40859bada1)** — a simpler mental-model guide (three engines, session/week/season structure, steady-state protocol, do/avoid lists) for a competitive-youth swimmer returning after a long hiatus. Local backup: `guides/returning-swimmer-guide.html`.
-- **[Second Opinion](https://claude.ai/code/artifact/dd30041a-2d1a-4621-8981-10dd334dab26)** — cross-check of an independent Gemini research pass against this corpus. Local backup: `guides/second-opinion.html`.
+- **[Second Opinion](https://claude.ai/code/artifact/dd30041a-2d1a-4621-8981-10dd334dab26)** — cross-check of an independent Gemini research pass against this corpus. Local backup: `research/gemini/second-opinion.html`.
 - `garpar_sundaefingar_2025-2026.md` — the source training log (66 sessions, Sept 2025–May 2026), already in this folder.
 - `research/gemini/gemini-masters-swim-training-framework.pdf` — the raw Gemini document reviewed above, kept for posterity with its own README explaining why most of it doesn't hold up.
 

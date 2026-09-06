@@ -6,7 +6,6 @@ An evidence-checked masters swim training project: research on technique, endura
 
 - **[Garpar Training Audit](guides/garpar-training-audit.html)** — research findings cross-referenced against a full season's training log, with a gap analysis and a recommended 3-session weekly framework.
 - **[The Returning Swimmer](guides/returning-swimmer-guide.html)** — a simpler mental-model guide for a former competitive swimmer returning after a long hiatus: three engines, session/week/season structure, a steady-state protocol, do/avoid lists.
-- **[Second Opinion](guides/second-opinion.html)** — a cross-check of an independent Google Gemini research pass against the findings below.
 
 ## Research
 
@@ -19,7 +18,7 @@ Individual session plans, one file per date, in [`practices/`](practices/) — g
 
 ## Other
 
-- [`research/gemini/`](research/gemini/) — an independent Gemini research export, kept for posterity — see its own README for why most of it doesn't hold up.
+- [`research/gemini/`](research/gemini/) — an independent Gemini research export, kept for posterity, alongside [Second Opinion](research/gemini/second-opinion.html), the cross-check of it against this project's own findings.
 
 ---
 
