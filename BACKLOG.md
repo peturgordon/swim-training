@@ -11,3 +11,9 @@ The fixed three training days give an asymmetric rest pattern: 2 days between Sa
 **Trade-off:** this puts the hardest, most neurologically demanding session on a weekend day, and 2 days between a Saturday max-effort sprint session and Monday's technique work is plausible but unproven as enough neuromuscular recovery.
 
 **Not evidence-mandated either way** — [`research/research_findings.md`](research/research_findings.md) doesn't resolve scheduling at this resolution (see [Training Framework](guides/training-framework.html)'s principle 6, on periodization for limited-hours swimmers being an acknowledged evidence gap). Worth reconsidering if the current arrangement doesn't feel right in practice — especially if Wednesday sprint sessions feel undercooked on only 2 days' recovery from Monday.
+
+## A practical logistics landing page
+
+Right now, the schedule (Mon/Wed/Sat, one hour, which archetype on which day) only lives buried inside [`WORKFLOW.md`](WORKFLOW.md) — a maintenance runbook, not somewhere a visitor would think to look for "when does this actually happen." Location isn't recorded anywhere in the repo at all, and time-of-day isn't either.
+
+Idea: a simple page (could just become the main content of [`index.md`](index.md), or a separate page linked from it) stating plainly: where (pool/location), which days, what time, how long, and the split — the practical facts, distinct from the research/framework/guides, which are about *what* to swim rather than *when and where*.
