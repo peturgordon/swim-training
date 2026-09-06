@@ -229,7 +229,7 @@ No claims addressing running/strength-training progression-rate literature (the 
 
 ## Cross-check against an independent Gemini research pass (2026-08-27)
 
-The user separately asked Google Gemini to research the same topic (masters-swim training framework, 40+ returning competitive swimmers, 3x/week). Gemini produced a 21-page framework document with 56 citations, exported as PDF to `gemini/Masters Swim Training Framework.pdf` in this folder. It was reviewed against this research corpus and published as **[Second Opinion](https://claude.ai/code/artifact/dd30041a-2d1a-4621-8981-10dd334dab26)** (local backup: `artifacts/second-opinion.html`).
+The user separately asked Google Gemini to research the same topic (masters-swim training framework, 40+ returning competitive swimmers, 3x/week). Gemini produced a 21-page framework document with 56 citations, exported as PDF to `research/gemini/gemini-masters-swim-training-framework.pdf`. It was reviewed against this research corpus and published as **[Second Opinion](https://claude.ai/code/artifact/dd30041a-2d1a-4621-8981-10dd334dab26)** (local backup: `guides/second-opinion.html`).
 
 Headline findings from that cross-check:
 - **Genuine convergence** on CSS methodology, the 3-day aerobic/threshold/sprint weekly split, technique-before-fatigue sequencing, and the core tracking metrics — independent agreement that strengthens confidence in all four.
@@ -265,11 +265,11 @@ Both artifacts republished at their existing URLs; local HTML backups refreshed.
 
 ## Related documents
 
-- **[Garpar Training Audit](https://claude.ai/code/artifact/eee8fa7b-3e1c-4eac-999d-95b2ed14c9d4)** — this research cross-referenced against a full read of the 65-session `garpar_sundaefingar_2025-2026.md` log, with a gap analysis and a 3-session weekly framework. Local backup: `artifacts/garpar-training-audit.html`.
-- **[The Returning Swimmer](https://claude.ai/code/artifact/43f6b25f-945e-4ee3-ac15-2f40859bada1)** — a simpler mental-model guide (three engines, session/week/season structure, steady-state protocol, do/avoid lists) for a competitive-youth swimmer returning after a long hiatus. Local backup: `artifacts/returning-swimmer-guide.html`.
-- **[Second Opinion](https://claude.ai/code/artifact/dd30041a-2d1a-4621-8981-10dd334dab26)** — cross-check of an independent Gemini research pass against this corpus. Local backup: `artifacts/second-opinion.html`.
+- **[Garpar Training Audit](https://claude.ai/code/artifact/eee8fa7b-3e1c-4eac-999d-95b2ed14c9d4)** — this research cross-referenced against a full read of the 65-session `garpar_sundaefingar_2025-2026.md` log, with a gap analysis and a 3-session weekly framework. Local backup: `guides/garpar-training-audit.html`.
+- **[The Returning Swimmer](https://claude.ai/code/artifact/43f6b25f-945e-4ee3-ac15-2f40859bada1)** — a simpler mental-model guide (three engines, session/week/season structure, steady-state protocol, do/avoid lists) for a competitive-youth swimmer returning after a long hiatus. Local backup: `guides/returning-swimmer-guide.html`.
+- **[Second Opinion](https://claude.ai/code/artifact/dd30041a-2d1a-4621-8981-10dd334dab26)** — cross-check of an independent Gemini research pass against this corpus. Local backup: `guides/second-opinion.html`.
 - `garpar_sundaefingar_2025-2026.md` — the source training log (66 sessions, Sept 2025–May 2026), already in this folder.
-- `gemini/Masters Swim Training Framework.pdf` — the raw Gemini document reviewed above.
+- `research/gemini/gemini-masters-swim-training-framework.pdf` — the raw Gemini document reviewed above, kept for posterity with its own README explaining why most of it doesn't hold up.
 
 Both artifacts also remain live on claude.ai independently of any local session — reachable via their URLs above, or via the `/artifacts` gallery in Claude Code.
 
@@ -280,4 +280,4 @@ Both published documents were revised to match Pass 2's findings:
 - ***The Returning Swimmer*** — removed the unverified "your stroke came back before your engine did" claim (Do/Avoid list + "coming back after years away" section) and replaced it with the actually-confirmed finding: detraining plateaus above an untrained baseline, so a genuine training history provides a real head start even if skill-vs-fitness timing itself isn't something research has compared. The shoulder-injury caution now notes the evidence is real but too weak (per its own authors) to set a validated volume cutoff. The decoupling section now notes the mechanism has direct swimming-specific confirmation, while numeric "decoupling %" thresholds remain an unvalidated heuristic.
 - ***Garpar Training Audit*** — the heart-rate tracking recommendation was upgraded from "general endurance physiology, not swim-specific in the verified set" to reflect the Pass 2 finding that swimming-specific cardiac-drift evidence exists, while flagging that specific % thresholds are still unvalidated. Footer source count corrected (6 search angles, not 5) and Pass 2 added to the citation line.
 
-Both artifacts republished at their existing URLs (see below); local HTML backups in `artifacts/` refreshed to match.
+Both artifacts republished at their existing URLs (see below); local HTML backups in `guides/` refreshed to match.

@@ -21,7 +21,7 @@ Individual session plans, one file per date, in [`practices/`](practices/) — g
 
 ## Other
 
-- [`gemini/`](gemini/) — an independent Gemini research export, kept for posterity — see its own README for why most of it doesn't hold up.
+- [`research/gemini/`](research/gemini/) — an independent Gemini research export, kept for posterity — see its own README for why most of it doesn't hold up.
 
 See [WORKFLOW.md](WORKFLOW.md) for the full step-by-step process — how a practice gets generated, and exactly how to publish a change.
 
