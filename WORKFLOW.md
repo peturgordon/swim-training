@@ -20,17 +20,13 @@ A step-by-step reference for how this project actually runs — usable by a futu
 
 ## 3. How to publish (git + GitHub Pages)
 
-This repo's commits use a **local identity**, already set — don't use `--global`:
-```
-git config --local user.name   # → peturgordon
-git config --local user.email  # → 325747432+peturgordon@users.noreply.github.com
-```
+This repo's commits use a **local identity** (deliberately different from the global git config) — check it with `git config --local --list` before committing, and never pass `--global` in this repo.
 
-Authentication is via a dedicated SSH key (`~/.ssh/id_ed25519_github_peturgordon`, configured in `~/.ssh/config` for `Host github.com` — separate from the existing GitLab key, no interaction needed).
+Authentication is via a dedicated SSH key set up specifically for this GitHub account, configured in `~/.ssh/config` for `Host github.com` — separate from any other key on this machine, no interaction needed.
 
 To publish a change:
 ```bash
-cd "<local clone of this repo>"
+cd <local clone of this repo>
 git add <changed files>
 git commit -m "short description"
 git push
