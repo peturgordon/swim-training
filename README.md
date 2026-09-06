@@ -19,6 +19,8 @@ An evidence-checked masters swim training project: research on technique, endura
 
 Individual session plans, one file per date, in [`practices/`](practices/) — generated from the framework above, with session notes and results logged after the fact.
 
+See [WORKFLOW.md](WORKFLOW.md) for the full step-by-step process — how a practice gets generated, and exactly how to publish a change.
+
 ## Publishing
 
 To make the HTML guides render as actual pages instead of source code, enable **GitHub Pages** for this repo (Settings → Pages → deploy from the `main` branch, root folder) once it's pushed. The guides would then be reachable at `https://<username>.github.io/<repo>/guides/garpar-training-audit.html`, etc.
