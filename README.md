@@ -19,10 +19,6 @@ An evidence-checked masters swim training project: research on technique, endura
 
 Individual session plans, one file per date, in [`practices/`](practices/) — generated from the framework above, with session notes and results logged after the fact.
 
-## Other
-
-- [`gemini/`](gemini/) — the independent Gemini research export reviewed in *Second Opinion*.
-
 ## Publishing
 
 To make the HTML guides render as actual pages instead of source code, enable **GitHub Pages** for this repo (Settings → Pages → deploy from the `main` branch, root folder) once it's pushed. The guides would then be reachable at `https://<username>.github.io/<repo>/guides/garpar-training-audit.html`, etc.
