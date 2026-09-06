@@ -1,0 +1,674 @@
+<!doctype html>
+<title>Garpar Training Audit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f7f6;
+    --surface:#ffffff;
+    --surface-2:#e9f1ef;
+    --ink:#122220;
+    --ink-muted:#4e625f;
+    --ink-faint:#7c8f8c;
+    --line:#d7e2e0;
+    --line-strong:#b9c9c6;
+    --accent:#0e7c74;
+    --accent-strong:#0a5f59;
+    --accent-soft:#dcefec;
+    --good:#1f7a4d;
+    --good-soft:#e2f3e8;
+    --warn:#93691b;
+    --warn-soft:#faf0da;
+    --bad:#a23a2c;
+    --bad-soft:#fbe8e4;
+    --shadow: 0 1px 2px rgba(18,34,32,0.06), 0 8px 24px -12px rgba(18,34,32,0.14);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0a1615;
+      --surface:#0f1e1c;
+      --surface-2:#132422;
+      --ink:#e7efed;
+      --ink-muted:#9fb6b2;
+      --ink-faint:#6f8985;
+      --line:#1e3230;
+      --line-strong:#2a4442;
+      --accent:#4fd1c4;
+      --accent-strong:#7ee0d5;
+      --accent-soft:#123330;
+      --good:#59b788;
+      --good-soft:#123024;
+      --warn:#d8ac55;
+      --warn-soft:#2c2412;
+      --bad:#e2786a;
+      --bad-soft:#2e1815;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a1615;
+    --surface:#0f1e1c;
+    --surface-2:#132422;
+    --ink:#e7efed;
+    --ink-muted:#9fb6b2;
+    --ink-faint:#6f8985;
+    --line:#1e3230;
+    --line-strong:#2a4442;
+    --accent:#4fd1c4;
+    --accent-strong:#7ee0d5;
+    --accent-soft:#123330;
+    --good:#59b788;
+    --good-soft:#123024;
+    --warn:#d8ac55;
+    --warn-soft:#2c2412;
+    --bad:#e2786a;
+    --bad-soft:#2e1815;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Newsreader', Georgia, 'Times New Roman', serif;
+    font-size:17px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent-soft); color:var(--accent-strong); }
+  a{ color:var(--accent-strong); text-decoration-color:var(--line-strong); text-underline-offset:2px; }
+  a:hover{ text-decoration-color:var(--accent); }
+  a:focus-visible, button:focus-visible, summary:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+
+  h1,h2,h3,h4{ font-family:'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight:700; color:var(--ink); text-wrap:balance; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace; font-variant-numeric:tabular-nums; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-strong); }
+
+  .wrap{ max-width:1040px; margin:0 auto; padding:0 24px; }
+  .prose{ max-width:660px; }
+  img,svg{ max-width:100%; }
+
+  /* ---------- Masthead ---------- */
+  .masthead{
+    border-bottom:1px solid var(--line);
+    padding:64px 0 40px;
+    background:
+      linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%);
+  }
+  .masthead .eyebrow{ display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .masthead .eyebrow::before{ content:""; display:inline-block; width:22px; height:2px; background:var(--accent); }
+  h1.title{ font-size:clamp(2.1rem, 4.2vw, 3.1rem); line-height:1.05; max-width:14ch; }
+  .dek{ margin-top:18px; max-width:56ch; color:var(--ink-muted); font-size:1.12rem; line-height:1.55; }
+  .stat-row{ display:flex; flex-wrap:wrap; gap:0; margin-top:36px; border-top:1px solid var(--line); }
+  .stat{ flex:1 1 140px; padding:16px 22px 0 0; border-right:1px solid var(--line); }
+  .stat:last-child{ border-right:none; }
+  .stat .n{ font-family:'IBM Plex Mono', monospace; font-size:1.6rem; font-weight:600; color:var(--accent-strong); font-variant-numeric:tabular-nums; display:block; }
+  .stat .l{ font-size:0.82rem; color:var(--ink-faint); margin-top:2px; }
+
+  /* ---------- TOC ---------- */
+  nav.toc{ padding:20px 0; border-bottom:1px solid var(--line); }
+  nav.toc ol{ list-style:none; margin:0; padding:0; display:flex; flex-wrap:wrap; gap:4px 0; font-family:'IBM Plex Mono', monospace; font-size:0.82rem; }
+  nav.toc li{ display:flex; align-items:center; }
+  nav.toc li:not(:last-child)::after{ content:"·"; color:var(--line-strong); margin:0 12px; }
+  nav.toc a{ color:var(--ink-muted); text-decoration:none; }
+  nav.toc a:hover{ color:var(--accent-strong); }
+
+  /* ---------- Sections ---------- */
+  section{ padding:56px 0; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+  .sec-head{ display:flex; gap:18px; align-items:baseline; margin-bottom:28px; }
+  .sec-num{ font-family:'IBM Plex Mono', monospace; font-size:0.85rem; color:var(--ink-faint); border-left:2px solid var(--accent); padding-left:10px; white-space:nowrap; }
+  h2.sec-title{ font-size:clamp(1.5rem, 2.6vw, 1.9rem); }
+  .lede{ max-width:70ch; color:var(--ink-muted); font-size:1.04rem; margin-bottom:30px; }
+  h3.sub{ font-size:1.15rem; margin:36px 0 14px; }
+  p{ margin:0 0 1em; }
+  p:last-child{ margin-bottom:0; }
+
+  /* ---------- Finding cards ---------- */
+  .findings{ display:flex; flex-direction:column; gap:14px; }
+  .finding{ background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:22px 24px; box-shadow:var(--shadow); }
+  .finding-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; margin-bottom:10px; }
+  .finding h4{ font-size:1.04rem; font-weight:600; line-height:1.35; max-width:60ch; }
+  .badge{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase; padding:3px 9px; border-radius:99px; white-space:nowrap; flex-shrink:0; font-weight:600;}
+  .badge.high{ background:var(--good-soft); color:var(--good); }
+  .badge.medium{ background:var(--warn-soft); color:var(--warn); }
+  .badge.low{ background:var(--bad-soft); color:var(--bad); }
+  .finding p{ color:var(--ink-muted); font-size:0.98rem; }
+  .finding .src{ margin-top:12px; font-family:'IBM Plex Mono', monospace; font-size:0.76rem; color:var(--ink-faint); display:flex; flex-wrap:wrap; gap:10px; }
+  .finding .src a{ color:var(--ink-faint); }
+  .finding .src a:hover{ color:var(--accent-strong); }
+
+  /* refuted list */
+  .refuted-list{ display:flex; flex-direction:column; gap:0; border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--surface); }
+  .refuted-item{ padding:14px 20px; border-bottom:1px solid var(--line); display:flex; gap:14px; align-items:flex-start; }
+  .refuted-item:last-child{ border-bottom:none; }
+  .refuted-item .mark{ font-family:'IBM Plex Mono', monospace; color:var(--bad); font-size:0.85rem; flex-shrink:0; margin-top:2px; }
+  .refuted-item p{ font-size:0.92rem; color:var(--ink-muted); }
+
+  /* ---------- Chart ---------- */
+  .chart-panel{ background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:26px 28px 18px; box-shadow:var(--shadow); }
+  .chart-panel .cap{ font-size:0.86rem; color:var(--ink-muted); margin-top:14px; }
+  .chart-panel .cap b{ color:var(--ink); font-weight:600; }
+
+  /* ---------- Wide tables ---------- */
+  .table-scroll{ overflow-x:auto; border:1px solid var(--line); border-radius:10px; background:var(--surface); box-shadow:var(--shadow); }
+  table{ border-collapse:collapse; width:100%; min-width:640px; font-size:0.92rem; }
+  table.wide{ min-width:920px; }
+  th,td{ text-align:left; padding:11px 16px; border-bottom:1px solid var(--line); vertical-align:top; }
+  thead th{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--ink-faint); font-weight:600; background:var(--surface-2); white-space:nowrap; }
+  tbody tr:last-child td{ border-bottom:none; }
+  td.num, th.num{ font-family:'IBM Plex Mono', monospace; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  td.desc{ color:var(--ink-muted); font-size:0.9rem; }
+
+  /* alignment table specific */
+  .verdict{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; padding:2px 8px; border-radius:99px; white-space:nowrap; font-weight:600; }
+  .verdict.match{ background:var(--good-soft); color:var(--good); }
+  .verdict.partial{ background:var(--warn-soft); color:var(--warn); }
+  .verdict.gap{ background:var(--bad-soft); color:var(--bad); }
+
+  /* ---------- Framework cards ---------- */
+  .day-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; }
+  @media (max-width: 860px){ .day-grid{ grid-template-columns:1fr; } }
+  .day-card{ background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:22px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:14px; }
+  .day-card .dh{ display:flex; justify-content:space-between; align-items:baseline; }
+  .day-card h4{ font-size:1.02rem; }
+  .day-card .goal{ font-size:0.8rem; color:var(--accent-strong); font-family:'IBM Plex Mono', monospace; }
+  .day-card ol{ margin:0; padding-left:0; list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .day-card li{ font-size:0.9rem; color:var(--ink-muted); padding-left:16px; border-left:2px solid var(--line); }
+  .day-card li b{ color:var(--ink); font-weight:600; display:block; font-size:0.78rem; text-transform:uppercase; letter-spacing:0.04em; font-family:'IBM Plex Mono', monospace; margin-bottom:2px; }
+
+  .principle-list{ display:flex; flex-direction:column; gap:0; }
+  .principle{ display:grid; grid-template-columns:34px 1fr; gap:16px; padding:20px 0; border-bottom:1px solid var(--line); }
+  .principle:first-child{ padding-top:0; }
+  .principle:last-child{ border-bottom:none; padding-bottom:0; }
+  .principle .idx{ font-family:'IBM Plex Mono', monospace; color:var(--accent); font-weight:600; font-size:0.95rem; }
+  .principle h4{ font-size:1.02rem; margin-bottom:6px; }
+  .principle p{ color:var(--ink-muted); font-size:0.96rem; }
+  .principle .tag{ font-family:'IBM Plex Mono', monospace; font-size:0.7rem; color:var(--ink-faint); margin-top:8px; display:inline-block; }
+
+  .callout{ background:var(--accent-soft); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:8px; padding:16px 20px; font-size:0.94rem; color:var(--ink); margin:24px 0; }
+  .callout b{ color:var(--accent-strong); }
+
+  .gap-note{ background:var(--bad-soft); border-left:3px solid var(--bad); border-radius:8px; padding:16px 20px; font-size:0.94rem; color:var(--ink); margin:24px 0; }
+
+  /* ---------- Sources / footer ---------- */
+  .src-list{ columns:2; column-gap:40px; font-size:0.88rem; }
+  @media (max-width: 720px){ .src-list{ columns:1; } }
+  .src-list div{ break-inside:avoid; margin-bottom:14px; }
+  .src-list .t{ color:var(--ink); font-weight:500; display:block; }
+  .src-list .q{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; color:var(--ink-faint); }
+
+  footer{ padding:40px 0 72px; color:var(--ink-faint); font-size:0.85rem; }
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">Research + Season Audit</div>
+    <h1 class="title">Garpar Training Audit</h1>
+    <p class="dek">What sports science actually supports for a masters swimmer chasing endurance and race-day speed on three one-hour sessions a week — checked against 65 sessions of last season's Garpar programming.</p>
+    <div class="stat-row">
+      <div class="stat"><span class="n mono">24</span><span class="l">sources fetched</span></div>
+      <div class="stat"><span class="n mono">106</span><span class="l">claims extracted</span></div>
+      <div class="stat"><span class="n mono">14 / 25</span><span class="l">survived adversarial verification</span></div>
+      <div class="stat"><span class="n mono">65</span><span class="l">Garpar sessions reviewed</span></div>
+      <div class="stat"><span class="n mono">Sep–May</span><span class="l">season audited</span></div>
+    </div>
+  </div>
+</header>
+
+<nav class="toc">
+  <div class="wrap">
+    <ol>
+      <li><a href="#evidence">What the evidence supports</a></li>
+      <li><a href="#refuted">What didn't hold up</a></li>
+      <li><a href="#season">Last season, audited</a></li>
+      <li><a href="#alignment">Where practice meets evidence</a></li>
+      <li><a href="#framework">A framework for your three sessions</a></li>
+      <li><a href="#lanes">Lane management for a shared group</a></li>
+      <li><a href="#tracking">Tracking progress without a meet</a></li>
+      <li><a href="#open">Open questions</a></li>
+      <li><a href="#sources">Sources</a></li>
+    </ol>
+  </div>
+</nav>
+
+<main class="wrap">
+
+  <!-- ============ EVIDENCE ============ -->
+  <section id="evidence">
+    <div class="sec-head">
+      <span class="sec-num">01</span>
+      <h2 class="sec-title">What the evidence supports</h2>
+    </div>
+    <p class="lede">Five search angles, 24 fetched sources, 106 candidate claims — each surviving claim below was put to three independent adversarial reviewers instructed to try to refute it. A claim needed two of three votes in its favor to survive. What's here is what didn't break.</p>
+
+    <div class="findings">
+
+      <div class="finding">
+        <div class="finding-top">
+          <h4>Intensity distribution should be event-dependent, and <em>polarized</em> beats <em>threshold-heavy</em> at the elite level.</h4>
+          <span class="badge high">High confidence</span>
+        </div>
+        <p>A systematic review found sprint-event swimmers typically train polarized/threshold, middle-distance swimmers threshold/pyramidal, and long-distance swimmers pyramidal. In a controlled 6-week crossover on 22 elite juniors, a polarized split (81% easy / 4% moderate / 15% hard, by blood lactate) beat a threshold split (65/25/10) on 100m time-trial improvement — <b>and</b> produced less fatigue and better recovery. The practical read: the "comfortably-hard tempo" middle zone is the one to shrink, not the one to live in.</p>
+        <div class="src">
+          <a href="https://pubmed.ncbi.nlm.nih.gov/33952709/" target="_blank" rel="noopener">González-Ravé et al. 2021, systematic review ↗</a>
+          <a href="https://www.researchgate.net/publication/326599627_Effects_of_a_6-Week_Period_of_Polarized_or_Threshold_Training_on_Performance_and_Fatigue_in_Elite_Swimmers" target="_blank" rel="noopener">Pla et al. 2019, RCT, n=22 ↗</a>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-top">
+          <h4>Technique breaks down under fatigue through a measurable mechanism — this is real biomechanics, not just "getting tired."</h4>
+          <span class="badge high">High confidence</span>
+        </div>
+        <p>Intracycle velocity variation (the within-stroke speed wobble that signals a smooth vs. ragged pull) stays flat at easy effort but rises at maximal effort as swimmers fatigue and lose mechanical efficiency. Stroke count — a simpler proxy for the same thing — rises measurably as pace drops late in a fatiguing set. Holding form under load is a distinct, trainable coordination skill, not an automatic byproduct of aerobic fitness.</p>
+        <div class="src">
+          <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10044880/" target="_blank" rel="noopener">Fernandes et al. 2023, scoping review, 76 studies ↗</a>
+          <a href="https://www.tandfonline.com/doi/abs/10.1080/15438627.2021.1929227" target="_blank" rel="noopener">Cuenca-Fernández et al. 2021 ↗</a>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-top">
+          <h4>Elite coaching is still dominated by "perfect technique" drilling in isolation — not by training technique to survive race conditions.</h4>
+          <span class="badge medium">Medium confidence</span>
+        </div>
+        <p>A qualitative study of 20 elite coaches found part-task, drill-based methods remain the dominant approach, aimed at reinforcing one "correct" mechanical pattern — even though the same coaches report awareness of contemporary approaches built to make technique robust under varying, race-like conditions. This is self-reported coaching culture, not a controlled trial, but it names your exact complaint precisely: standard drilling isn't designed to transfer to speed or fatigue.</p>
+        <div class="src">
+          <a href="https://www.tandfonline.com/doi/full/10.1080/02640414.2020.1792703" target="_blank" rel="noopener">Brackley, Barris, Tor & Farrow 2020, n=20 coaches ↗</a>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-top">
+          <h4>Practicing a skill while already fatigued measurably impairs learning it — separate from the fatigue just slowing you down in the moment.</h4>
+          <span class="badge high">High confidence</span>
+        </div>
+        <p>In a controlled experiment, a group that practiced a novel motor skill while physically fatigued learned it far slower within the same session than a fresh group (learning slope 0.038 vs. 0.169). A stronger claim — that this deficit lingers for days afterward — was tested and refuted, so treat the effect as session-local: drilling technique for the first time at the tail end of a hard set is a worse way to build it than drilling it fresh, then adding fatigue on top deliberately.</p>
+        <div class="src">
+          <a href="https://elifesciences.org/articles/40578" target="_blank" rel="noopener">eLife 2019 ↗</a>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-top">
+          <h4>Short race-pace repeats produce less acute fatigue than long ones at the same total volume — but the claim that they specifically protect technique did not survive verification.</h4>
+          <span class="badge medium">Medium confidence</span>
+        </div>
+        <p>Ultra-short race-pace training (20×50m) produced significantly lower blood lactate than volume-matched traditional race-pace repeats (10×100m) at the same pace and work:rest ratio. That's confirmed. The more attractive follow-on claim — that the shorter format specifically preserves stroke mechanics better — was tested against three independent reviewers and refuted twice. Less fatigue per set is real; "therefore better technique" is not yet established.</p>
+        <div class="src">
+          <a href="https://www.tandfonline.com/doi/abs/10.1080/15438627.2021.1929227" target="_blank" rel="noopener">Cuenca-Fernández et al. 2021 ↗</a>
+          <a href="https://www.researchgate.net/publication/351169031_Lower_fatigue_and_faster_recovery_of_ultra-short_race-pace_swimming_training_sessions" target="_blank" rel="noopener">companion analysis, n=14 ↗</a>
+        </div>
+      </div>
+
+      <div class="finding">
+        <div class="finding-top">
+          <h4>Elite open-water swimmers hold pace remarkably close to a lab-measured "critical speed" for the whole race — pacing off a real benchmark works.</h4>
+          <span class="badge medium">Medium confidence</span>
+        </div>
+        <p>Top finishers in a 10km open-water race sustained roughly 92% of their pool-derived Critical Swimming Speed (CSS) from start to finish, with minimal decline — while lower-ranked swimmers faded. CSS itself is a simple, well-established field test (a 400m plus a 200m time trial), not a fad metric.</p>
+        <div class="src">
+          <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12371947/" target="_blank" rel="noopener">10km open-water pacing study ↗</a>
+          <a href="https://www.usms.org/fitness-and-training/articles-and-videos/articles/how-to-train-with-critical-swim-speed-intervals" target="_blank" rel="noopener">USMS, CSS field test (secondary) ↗</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ REFUTED ============ -->
+  <section id="refuted">
+    <div class="sec-head">
+      <span class="sec-num">02</span>
+      <h2 class="sec-title">What didn't hold up</h2>
+    </div>
+    <p class="lede">Listed for transparency — these are the intuitively attractive answers that were explicitly tested and killed by adversarial review. None of the recommendations later in this document rely on them, even where they would have made a tidier story.</p>
+    <div class="refuted-list">
+      <div class="refuted-item"><span class="mark mono">✗ 1–2</span><p>One dominant "wave-like" periodization model, used across elite swimming to build fitness and technique together — the elite literature itself doesn't cleanly settle this.</p></div>
+      <div class="refuted-item"><span class="mark mono">✗ 0–3</span><p>That ultra-short race-pace training (USRPT) lets swimmers bank more race-pace volume with better-preserved technique than longer repeats — the underlying stroke-count correlation didn't replicate under review.</p></div>
+      <div class="refuted-item"><span class="mark mono">✗ 1–2</span><p>That stroke length (not rate) is what separates elite 50m sprinters, and that gold-medal distance swimmers favor rate over length — both directions of this claim failed.</p></div>
+      <div class="refuted-item"><span class="mark mono">✗ 0–3</span><p>That elite swimmers hold a flatter velocity-variation curve than beginners as speed rises toward maximal effort.</p></div>
+      <div class="refuted-item"><span class="mark mono">✗ 0–3</span><p>That a coach-education program shifted cueing language from internal ("drive your elbow up") to external/holistic focus in a way shown to produce more robust skill execution.</p></div>
+      <div class="refuted-item"><span class="mark mono">✗ 0–3</span><p>That fatigue-related learning deficits persist for multiple days after the fatigue itself resolves.</p></div>
+    </div>
+  </section>
+
+  <!-- ============ SEASON AUDIT ============ -->
+  <section id="season">
+    <div class="sec-head">
+      <span class="sec-num">03</span>
+      <h2 class="sec-title">Last season, audited</h2>
+    </div>
+    <p class="lede">Reading all 65 logged Garpar sessions (Sept '25–May '26) end to end, one structural pattern repeats almost every time, and one clear inflection point splits the season in two.</p>
+
+    <div class="chart-panel">
+      <svg viewBox="0 0 920 300" role="img" aria-labelledby="chartTitle chartDesc" style="width:100%;height:auto;font-family:'IBM Plex Mono',monospace;">
+        <title id="chartTitle">Group target interval per 100m, September through May</title>
+        <desc id="chartDesc">A step line falling from 2:30 per 100m in September to 2:00 per 100m by late January, holding flat through May. A dashed marker at February notes where explicit effort-zone labelling (z1 through z5) begins appearing in the sets.</desc>
+        <!-- gridlines -->
+        <g stroke="var(--line)" stroke-width="1">
+          <line x1="70" y1="40" x2="900" y2="40"></line>
+          <line x1="70" y1="100" x2="900" y2="100"></line>
+          <line x1="70" y1="160" x2="900" y2="160"></line>
+          <line x1="70" y1="220" x2="900" y2="220"></line>
+        </g>
+        <!-- y labels -->
+        <g fill="var(--ink-faint)" font-size="12">
+          <text x="60" y="44" text-anchor="end">2:30</text>
+          <text x="60" y="104" text-anchor="end">2:20</text>
+          <text x="60" y="164" text-anchor="end">2:10</text>
+          <text x="60" y="224" text-anchor="end">2:00</text>
+        </g>
+        <!-- axis -->
+        <line x1="70" y1="240" x2="900" y2="240" stroke="var(--line-strong)" stroke-width="1"></line>
+        <!-- step line: Sep-Oct 2:30(40) | Nov-Dec 2:20(100) | Jan 2:10(160)->2:00(220) | Feb-May 2:00(220) -->
+        <path d="M 70 40 L 300 40 L 300 100 L 470 100 L 470 160 L 560 160 L 560 220 L 900 220"
+              fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"></path>
+        <!-- zone-label marker at Feb (~x=610) -->
+        <line x1="610" y1="30" x2="610" y2="240" stroke="var(--bad)" stroke-width="1.5" stroke-dasharray="4 4"></line>
+        <circle cx="610" cy="220" r="4.5" fill="var(--bad)"></circle>
+        <text x="618" y="60" fill="var(--bad)" font-size="12" font-weight="600">z1–z5 labelling begins</text>
+        <!-- endpoint marker -->
+        <circle cx="70" cy="40" r="4" fill="var(--accent)"></circle>
+        <circle cx="900" cy="220" r="4" fill="var(--accent)"></circle>
+        <!-- month labels -->
+        <g fill="var(--ink-faint)" font-size="12">
+          <text x="70" y="262">Sep</text>
+          <text x="185" y="262">Oct</text>
+          <text x="300" y="262">Nov</text>
+          <text x="385" y="262">Dec</text>
+          <text x="470" y="262">Jan</text>
+          <text x="560" y="262">Feb</text>
+          <text x="660" y="262">Mar</text>
+          <text x="770" y="262">Apr</text>
+          <text x="855" y="262">May</text>
+        </g>
+      </svg>
+      <p class="cap"><b>The pace target tightened on a fixed schedule, independent of any measured baseline.</b> Interval per 100m dropped from 2:30 to 2:00 in five steps over the season's first five months, then held flat for the remaining four. Explicit effort-zone language (z1 white through z5 purple, sometimes with target pulse) only starts appearing in the written sets from <b>1 Feb</b> onward — by which point the pace standard had already reached its floor. The zone system arrived after the squeeze, not before it.</p>
+    </div>
+
+    <h3 class="sub">The recurring shape of a session</h3>
+    <p>Nearly every one of the 65 sessions follows the same skeleton: <b>Upphitun</b> (warmup, often with fins) → <b>Tækni</b> (technique, almost always fins and/or paddles, at reduced speed, isolating one cue — high elbow, catch-up, single-arm, sculling) → <b>Aðalsett</b> (main set, usually pull-buoy-and-paddles tempo work plus a shorter maximal-effort portion) → a short cooldown. It's a well-built skeleton, and the drill vocabulary is genuinely broad — sculling, catch-up, fist swimming, high-elbow ("gilligill"), single-arm, kick isolation, all four strokes rotate through it regularly.</p>
+    <p>What doesn't happen, in any of the 65 sessions, is a step between the drill and the maximal effort that keeps the day's technique cue active while speed rises. Technique is taught slow-and-isolated; speed is trained separately and described only by effort tag ("z5", "útopnu", "á fullu"). The two never share a set.</p>
+
+    <h3 class="sub">Max-effort sets favor short reps — but recovery is often too short to protect them</h3>
+    <p>The genuinely maximal portions are usually short (15–25m within a 50), which is the right instinct — short reps at true top speed are how neural/speed adaptations are trained without accumulated fatigue wrecking form. But rest is frequently 10–30s for these reps (e.g. 8×50, 25m all-out / 25m easy, 10s rest), which is short enough that later reps in the set are executed increasingly fatigued — closer to lactate-tolerance conditioning than to protected, high-quality speed work. A handful of sets (30–60s rest on z4/z5 portions) get this right already.</p>
+
+    <h3 class="sub">400m is trained as continuous volume, not as a fatigue-management problem</h3>
+    <p>Distances up to 500–600m appear regularly, and 200–500m repeats at z2/z3 are common — real aerobic volume is there. But nowhere in the season is a ~400m effort deliberately broken down and paired with an explicit technique-holding cue the way the log already does well for pull-buoy sets (a few sessions ask swimmers to count strokes per 50 and "hold the same number" through a pull-buoy set — genuinely good technique-under-load practice that just never gets applied to a straight, un-aided 400m.)</p>
+
+    <h3 class="sub">No visible testing, blocks, or taper</h3>
+    <p>The only individualized numbers in the whole season are the fixed clock intervals (@2:00, @1:10, etc.) and the load score Commit assigns; there's no recorded time trial, CSS test, or personal-benchmark session anywhere in the log, and no visible base/build/peak structure — training runs as one continuous stream from September to May. Starts and turns get brief, late-season practice time (March onward), suggesting a spring meet was on the calendar, but nothing in the log shows a deliberate taper toward it.</p>
+  </section>
+
+  <!-- ============ ALIGNMENT ============ -->
+  <section id="alignment">
+    <div class="sec-head">
+      <span class="sec-num">04</span>
+      <h2 class="sec-title">Where practice meets the evidence</h2>
+    </div>
+    <p class="lede">Mapping the season's actual patterns against what survived verification — and against the two problems you named directly.</p>
+    <div class="table-scroll">
+      <table class="wide">
+        <thead>
+          <tr><th>What the evidence supports</th><th>What last season did</th><th class="num">Verdict</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Widen the easy/hard split, shrink the "comfortably hard" middle</td>
+            <td class="desc">Most main-set volume sits at "gott tempó" (good tempo) — a moderate-hard, sustained effort that's exactly the grey zone the RCT found weaker than a polarized split.</td>
+            <td class="num"><span class="verdict partial">Partial</span></td>
+          </tr>
+          <tr>
+            <td>Keep technique drilling early, while fresh</td>
+            <td class="desc">Consistently done first, at reduced speed, before the main set — this matches the evidence well.</td>
+            <td class="num"><span class="verdict match">Match</span></td>
+          </tr>
+          <tr>
+            <td>Bridge drilled technique into rising speed before pure max effort</td>
+            <td class="desc">No session pairs the day's technique cue with a building-speed set; technique and speed are structurally separate every time.</td>
+            <td class="num"><span class="verdict gap">Gap</span></td>
+          </tr>
+          <tr>
+            <td>Give maximal reps real recovery so form stays intact</td>
+            <td class="desc">Short reps (good), but rest is often 10–30s on the hardest portions — enough to compound fatigue across the set.</td>
+            <td class="num"><span class="verdict partial">Partial</span></td>
+          </tr>
+          <tr>
+            <td>Rehearse technique-under-fatigue at the specific distance that breaks down (your 400m)</td>
+            <td class="desc">400m+ efforts appear as aerobic volume, never as a stroke-count-tracked, technique-held set the way pull-buoy work already is.</td>
+            <td class="num"><span class="verdict gap">Gap</span></td>
+          </tr>
+          <tr>
+            <td>Calibrate intervals to a personal benchmark (CSS or similar)</td>
+            <td class="desc">One global interval for the whole squad, tightened on a season-long schedule, not tied to any individual's tested pace.</td>
+            <td class="num"><span class="verdict gap">Gap</span></td>
+          </tr>
+          <tr>
+            <td>Structure training in blocks with a shifting emphasis, not one straight line</td>
+            <td class="desc">Effectively one continuous 8-month progression of a single number; genuinely under-researched for masters swimmers, so treat this row as the softest one on the table.</td>
+            <td class="num"><span class="verdict gap">Gap</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout"><b>Your two named problems, in one line:</b> the season builds broad technique vocabulary and real aerobic volume, but never once asks you to hold a technique cue while going fast or while going long — which is precisely where you say things fall apart.</div>
+  </section>
+
+  <!-- ============ FRAMEWORK ============ -->
+  <section id="framework">
+    <div class="sec-head">
+      <span class="sec-num">05</span>
+      <h2 class="sec-title">A framework for your three sessions</h2>
+    </div>
+    <p class="lede">Six principles, each tagged with how firmly it's grounded — then a concrete weekly shape you can run with your existing stroke mix (four strokes, tilted toward crawl, same as last season).</p>
+
+    <div class="principle-list">
+      <div class="principle">
+        <span class="idx mono">01</span>
+        <div>
+          <h4>Widen the split; thin the middle</h4>
+          <p>Within each session, aim most non-technique swimming clearly easy (conversational, z1–z2) or clearly hard (near-max, z4–z5). Deliberately shrink "good tempo" pull-buoy volume rather than defaulting to it as the main set.</p>
+          <span class="tag">Grounded in: polarized-vs-threshold RCT, high confidence</span>
+        </div>
+      </div>
+      <div class="principle">
+        <span class="idx mono">02</span>
+        <div>
+          <h4>Add the missing middle step: a bridge set</h4>
+          <p>Keep drilling fresh and slow as you already do. Then, before the hardest effort, insert a short set that carries the day's cue into rising speed — e.g. 6×50 building 25→50 while holding the cue — instead of jumping straight from slow drill to all-out effort.</p>
+          <span class="tag">Grounded in: fatigue-impairs-learning study + coaching-practice gap, high/medium confidence</span>
+        </div>
+      </div>
+      <div class="principle">
+        <span class="idx mono">03</span>
+        <div>
+          <h4>Protect the quality of maximal reps with real recovery</h4>
+          <p>Keep sprint reps short (15–25m, as last season already favored) but lengthen rest on the truly maximal portions specifically — 60–90s+ rather than 10–20s — so each rep is swum near top speed with form intact. Save short-rest, high-volume reps for separate conditioning work, not technique work.</p>
+          <span class="tag">Extrapolated from the fatigue-mechanism evidence — the "USRPT protects technique" claim itself was refuted, so treat this as informed design, not a proven protocol</span>
+        </div>
+      </div>
+      <div class="principle">
+        <span class="idx mono">04</span>
+        <div>
+          <h4>Train the exact failure point: a tracked 400m</h4>
+          <p>Once every week or two, swim a straight or lightly-broken ~400m while counting strokes per length and trying to hold the count as fatigue sets in — the same "count and hold" idea last season already used well for pull-buoy sets, just applied without aids to the distance that actually gives you trouble.</p>
+          <span class="tag">Direct application of the stroke-count/IVV fatigue findings, medium confidence</span>
+        </div>
+      </div>
+      <div class="principle">
+        <span class="idx mono">05</span>
+        <div>
+          <h4>Get a real number to train against</h4>
+          <p>Test Critical Swim Speed periodically — a 400m time trial plus a 200m time trial, roughly every 6–8 weeks — and set your own interval targets off that instead of the squad's shared clock. Useful both for tracking "am I getting faster" and for pacing endurance sets honestly.</p>
+          <span class="tag">Grounded in: CSS field-test literature + open-water pacing study, medium confidence</span>
+        </div>
+      </div>
+      <div class="principle">
+        <span class="idx mono">06</span>
+        <div>
+          <h4>Plan in blocks, not one long straight line</h4>
+          <p>Rather than one interval tightening steadily for eight months, run roughly 4–6 week blocks with a shifting emphasis — an aerobic-base block, a block leaning into the bridge-set and top-end-speed work above, a pre-meet block adding race-simulation and a short taper.</p>
+          <span class="tag">No direct masters-specific evidence exists for this — flagged as the one recommendation resting on general principle, not a study</span>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="sub">Three session types, one week</h3>
+    <div class="day-grid">
+      <div class="day-card">
+        <div class="dh"><h4>Day A — Base &amp; Technique</h4><span class="goal mono">mostly z1–z2</span></div>
+        <ol>
+          <li><b>Pre-pool prehab · 5min</b>Banded Y-T-W retractions + thoracic rotations — wakes up the muscles that hold a high-elbow catch together, before the day's technique focus.</li>
+          <li><b>Warmup · 10–12min</b>Easy swim, mixed strokes, one loosening drill.</li>
+          <li><b>Technique · 15min</b>Slow, fins-assisted, one cue only (e.g. high-elbow catch). Crawl-heavy, one non-crawl stroke rotated in.</li>
+          <li><b>Bridge · 8min</b>4–6×50 building 25→50 holding today's cue, easy pace ceiling.</li>
+          <li><b>Aerobic main · 15–18min</b>4–6×200 or continuous 800–1000 at genuinely easy z1–z2 — CSS pace or below once tested.</li>
+          <li><b>Cooldown · 5min</b>Very easy, any stroke.</li>
+        </ol>
+      </div>
+      <div class="day-card">
+        <div class="dh"><h4>Day B — Speed Bridge</h4><span class="goal mono">z1 + z4–z5</span></div>
+        <ol>
+          <li><b>Pre-pool prehab · 5min</b>Banded external rotations + push-up plus — primes the rotator cuff and serratus anterior before the week's highest-load reps.</li>
+          <li><b>Warmup · 10min</b>Easy swim + 4×25 build.</li>
+          <li><b>Technique · 12min</b>Fins/paddles drill on a crawl catch or rotation cue.</li>
+          <li><b>Bridge · 10min</b>6–8×50 building to near-max over the last 15–25m, cue still active, full recovery (30–40s).</li>
+          <li><b>Max effort · 12–15min</b>6–10×15–25m truly all-out, <b>60–90s recovery</b> — quality over volume, stop the set if form visibly breaks.</li>
+          <li><b>Cooldown · 6min</b>Easy, technique-focused.</li>
+        </ol>
+      </div>
+      <div class="day-card">
+        <div class="dh"><h4>Day C — Race Distance</h4><span class="goal mono">z2–z3 + fatigue focus</span></div>
+        <ol>
+          <li><b>Pre-pool prehab · 5min</b>Side planks + dynamic hip/ankle mobility — supports body position and kick mechanics through the longest set of the week.</li>
+          <li><b>Warmup · 10min</b>Easy swim, other three strokes rotated in.</li>
+          <li><b>Technique · 10min</b>Short, one cue, moderate pace (not slow) — priming for the main set.</li>
+          <li><b>Race-distance set · 20–25min</b>Every 1–2 weeks: ~400m broken into 100s or 200s, counting strokes/length, holding the count as pace/fatigue rises. Other weeks: 4–6×100–200 @ CSS pace, holding form as the primary metric.</li>
+          <li><b>Cooldown · 5min</b>Easy, any stroke.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="callout">This keeps the four-stroke rotation and the crawl tilt from last season — technique and warmup blocks are the natural place to rotate back/breast/fly through, while the bridge, max-effort, and race-distance work stay crawl-focused, matching both your goals and the group's existing emphasis.</div>
+    <div class="callout" style="margin-top:14px;"><b>On the prehab additions:</b> the exercise categories (thoracic mobility, rotator cuff/scapular stabilizer activation, core anti-rotation) are standard, sensible sports-medicine practice — but no research in this corpus validates a specific dose for this population. The best available injury review found the evidence too weak to set a validated cutoff for any age group. Treat 5 minutes of this as prudent general conditioning, not a proven protocol.</div>
+  </section>
+
+  <!-- ============ LANE MANAGEMENT ============ -->
+  <section id="lanes">
+    <div class="sec-head">
+      <span class="sec-num">06</span>
+      <h2 class="sec-title">Lane management for a shared group</h2>
+    </div>
+    <p class="lede">Everything above assumes you can actually swim your own pace in a shared lane. A masters lane usually mixes abilities — a few practical, non-evidence-graded habits keep that from undermining the framework.</p>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Practice</th><th>What it means</th><th class="desc">Why</th></tr></thead>
+        <tbody>
+          <tr><td>CSS-based lane assignment</td><td class="desc">Group by tested CSS pace, not reputation or history</td><td class="desc">Keeps everyone in a lane actually training in the same zone</td></tr>
+          <tr><td>Front / Middle / Back roles</td><td class="desc">Front sets pace and leaves on the interval; Middle drafts and rotates into the lead on drill sets; Back adjusts for an off-day, a stroke change, or tight shoulders</td><td class="desc">Gives every lane position a legitimate job, not just "keeping up"</td></tr>
+          <tr><td>Staggered send-offs</td><td class="desc">Leave ~5s apart, especially on faster reps</td><td class="desc">Keeps clear water at the walls, avoids congestion and swum-over turns</td></tr>
+          <tr><td>Fins/buoy as equalizer</td><td class="desc">Whoever can't hold the lane's send-off interval that day uses fins or a pull buoy rather than skipping reps</td><td class="desc">Keeps the group's rep count and rhythm intact without forcing an uneven effort comparison</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="callout" style="margin-top:18px;">This is practitioner coaching-logistics knowledge, not something put through adversarial verification like the rest of this document — useful group-management practice regardless of evidence tier.</div>
+  </section>
+
+  <!-- ============ TRACKING ============ -->
+  <section id="tracking">
+    <div class="sec-head">
+      <span class="sec-num">07</span>
+      <h2 class="sec-title">Tracking progress without a meet</h2>
+    </div>
+    <p class="lede">No race on the calendar means no finish-line clock to check against. These three buckets replace it — each tells you something different, and none require more than a watch and a notebook.</p>
+
+    <div class="day-grid">
+      <div class="day-card">
+        <div class="dh"><h4>Pace</h4><span class="goal mono">are you getting faster</span></div>
+        <ol>
+          <li><b>CSS test</b>400m + 200m time trial, every 6–8 weeks. Your cleanest single trend line — and it recalibrates every interval in the framework above off your own pace instead of a placeholder.</li>
+          <li><b>Repeated benchmark set</b>Same distance, same target effort, run periodically (e.g. monthly) — track the average time trending down.</li>
+        </ol>
+      </div>
+      <div class="day-card">
+        <div class="dh"><h4>Efficiency</h4><span class="goal mono">is technique holding up</span></div>
+        <ol>
+          <li><b>Stroke count per 25m</b>At a fixed pace, tracked over weeks. Falling count at the same pace means a more efficient pull.</li>
+          <li><b>Stroke count held under fatigue</b>The delta between early-set and late-set count during a hard or long effort. This is the most evidence-grounded number here — it's the exact proxy the verified research uses for technique breaking down under fatigue, and it speaks directly to your stated problem.</li>
+          <li><b>SWOLF</b>Stroke count + seconds per length, the number most swim watches surface. A useful smoothed trend, but a coaching heuristic, not something in the verified research — layer it on top of stroke count, don't treat it as an independent signal.</li>
+          <li><b>Stroke rate</b>Strokes/min, via tempo trainer or watch. Paired with distance-per-stroke it shows <em>how</em> you're getting faster. Which one to prioritize was itself one of the refuted claims in the research, so track both rather than optimizing toward either.</li>
+        </ol>
+      </div>
+      <div class="day-card">
+        <div class="dh"><h4>Effort</h4><span class="goal mono">is the engine improving</span></div>
+        <ol>
+          <li><b>Heart rate at fixed pace</b>Lower HR for the same pace over months signals real aerobic improvement. A supplementary research pass confirmed this isn't just borrowed from running/cycling — a direct swimming-specific study found the same heart-rate "drift" mechanism during sustained effort, tracking rising stress hormones rather than dehydration. What isn't validated: any specific numeric "decoupling %" threshold — treat those as a coaching-platform heuristic, not a proven cutoff. Wrist-optical HR is unreliable mid-stroke (water pressure + arm motion); a swim-rated chest strap works, or the manual 10s pulse count the Garpar log already uses ("púls ~120") — just log it consistently.</li>
+          <li><b>RPE (1–10)</b>No equipment needed. The same pace feeling easier over time is a meaningful signal on its own.</li>
+          <li><b>Session load</b>RPE × duration, summed weekly — a quick check that training stress is actually progressing rather than repeating.</li>
+        </ol>
+      </div>
+    </div>
+
+    <h3 class="sub">What to actually log each session</h3>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>Field</th><th>When</th><th class="num">Effort</th></tr></thead>
+        <tbody>
+          <tr><td>Main set time / pace</td><td class="desc">Every session with a timed set</td><td class="num">None — already on the clock</td></tr>
+          <tr><td>Stroke count, start vs. end of the hard/long set</td><td class="desc">Every Day B and Day C session</td><td class="num">~10s, count while swimming</td></tr>
+          <tr><td>HR or RPE after the hardest rep</td><td class="desc">Every session</td><td class="num">10s pulse count or a number 1–10</td></tr>
+          <tr><td>CSS (400m + 200m time trial)</td><td class="desc">Every 6–8 weeks</td><td class="num">One full session</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout"><b>If you only track one thing:</b> stroke count held across a fatiguing set. It's the single number in this list that maps directly onto a confirmed research finding <em>and</em> onto the exact problem you started with — technique that doesn't survive sprints or 400m.</div>
+  </section>
+
+  <!-- ============ OPEN QUESTIONS ============ -->
+  <section id="open">
+    <div class="sec-head">
+      <span class="sec-num">08</span>
+      <h2 class="sec-title">Open questions</h2>
+    </div>
+    <p class="lede">What would sharpen this from a framework into an actual dated program.</p>
+    <div class="gap-note"><b>Meet calendar:</b> the recommended block structure (principle 06) can't be scheduled without knowing when — or whether — a masters meet is on your calendar this season. If there's a date, the pre-meet block and taper should count backward from it.</div>
+    <div class="gap-note" style="margin-top:14px;"><b>Baseline numbers:</b> a first CSS test (400m + 200m time trial) would let every interval in this framework be set to your actual pace rather than a placeholder — worth doing in the first week of whatever comes next.</div>
+    <div class="gap-note" style="margin-top:14px;"><b>Which specific drills carry over:</b> no confirmed research directly ranks catch-up vs. sculling vs. fist-swim vs. high-elbow drills by how well they transfer to race pace — the coaching-practice finding above speaks to the drilling <em>paradigm</em> being under-bridged, not to any one drill being wrong. Worth treating your existing drill list as fine and focusing the change on principles 02–04 above.</div>
+  </section>
+
+  <!-- ============ SOURCES ============ -->
+  <section id="sources">
+    <div class="sec-head">
+      <span class="sec-num">09</span>
+      <h2 class="sec-title">Sources</h2>
+    </div>
+    <div class="src-list">
+      <div><a class="t" href="https://pubmed.ncbi.nlm.nih.gov/33952709/" target="_blank" rel="noopener">González-Ravé et al., Training Intensity Distribution, Volume &amp; Periodization in Elite Swimmers — systematic review</a><span class="q">IJSPP, 2021 · PMID 33952709</span></div>
+      <div><a class="t" href="https://www.researchgate.net/publication/326599627_Effects_of_a_6-Week_Period_of_Polarized_or_Threshold_Training_on_Performance_and_Fatigue_in_Elite_Swimmers" target="_blank" rel="noopener">Pla et al., Polarized vs. Threshold Training — RCT</a><span class="q">IJSPP, 2019 · n=22</span></div>
+      <div><a class="t" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12371947/" target="_blank" rel="noopener">Critical speed and pacing in elite 10km open-water racing</a><span class="q">2024</span></div>
+      <div><a class="t" href="https://www.usms.org/fitness-and-training/articles-and-videos/articles/how-to-train-with-critical-swim-speed-intervals" target="_blank" rel="noopener">USMS — how to train with critical swim speed intervals</a><span class="q">secondary source</span></div>
+      <div><a class="t" href="https://www.tandfonline.com/doi/abs/10.1080/15438627.2021.1929227" target="_blank" rel="noopener">Cuenca-Fernández et al., Lower fatigue and faster recovery of USRPT</a><span class="q">Research in Sports Medicine, 2021 · n=14</span></div>
+      <div><a class="t" href="https://www.researchgate.net/publication/351169031_Lower_fatigue_and_faster_recovery_of_ultra-short_race-pace_swimming_training_sessions" target="_blank" rel="noopener">Companion analysis, USRPT vs. RPT lactate response</a><span class="q">2021</span></div>
+      <div><a class="t" href="https://www.frontiersin.org/journals/sports-and-active-living/articles/10.3389/fspor.2025.1751687/full" target="_blank" rel="noopener">Repeated sprint ability and 50m freestyle performance</a><span class="q">Frontiers in Sports &amp; Active Living, 2025</span></div>
+      <div><a class="t" href="https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0162387" target="_blank" rel="noopener">Thrust and drag power in elite front-crawl sprinting</a><span class="q">PLOS ONE, 2016 · n=10</span></div>
+      <div><a class="t" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10044880/" target="_blank" rel="noopener">Fernandes et al., Intracycle Velocity Variation in Swimming — scoping review</a><span class="q">Bioengineering, 2023 · 76 studies</span></div>
+      <div><a class="t" href="https://www.tandfonline.com/doi/full/10.1080/02640414.2020.1792703" target="_blank" rel="noopener">Brackley, Barris, Tor &amp; Farrow, Coaches' perspective on skill acquisition</a><span class="q">Journal of Sports Sciences, 2020 · n=20</span></div>
+      <div><a class="t" href="https://journals.sagepub.com/doi/10.1177/17479541241291541" target="_blank" rel="noopener">Powell et al., Coach education and contextual interference</a><span class="q">IJSSC, 2024 · case study, n=2</span></div>
+      <div><a class="t" href="https://elifesciences.org/articles/40578" target="_blank" rel="noopener">Fatigue induces detrimental changes in motor-skill learning</a><span class="q">eLife, 2019</span></div>
+      <div><a class="t" href="https://www.usms.org/fitness-and-training/articles-and-videos/articles/periodization" target="_blank" rel="noopener">USMS — periodization for masters swimmers</a><span class="q">secondary source</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    Built from the deep-research workflow (6 search angles → 24 sources → 106 claims → 25 adversarially verified), a supplementary pass on detraining/decoupling/injury risk (5 angles → 15 sources → 25 verified), plus a full read of <span class="mono">garpar_sundaefingar_2025-2026.md</span>, 65 sessions, Sep 2025–May 2026. Full corpus: <span class="mono">research_findings.md</span>.
+  </div>
+</footer>

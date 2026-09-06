@@ -1,0 +1,446 @@
+<!doctype html>
+<title>The Returning Swimmer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Newsreader:ital,wght@0,400;0,500;0,600;1,400;1,500&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f7f6;
+    --surface:#ffffff;
+    --surface-2:#e9f1ef;
+    --ink:#122220;
+    --ink-muted:#4e625f;
+    --ink-faint:#7c8f8c;
+    --line:#d7e2e0;
+    --line-strong:#b9c9c6;
+    --accent:#0e7c74;
+    --accent-strong:#0a5f59;
+    --accent-soft:#dcefec;
+    --good:#1f7a4d;
+    --good-soft:#e2f3e8;
+    --warn:#93691b;
+    --warn-soft:#faf0da;
+    --bad:#a23a2c;
+    --bad-soft:#fbe8e4;
+    --shadow: 0 1px 2px rgba(18,34,32,0.06), 0 8px 24px -12px rgba(18,34,32,0.14);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0a1615; --surface:#0f1e1c; --surface-2:#132422;
+      --ink:#e7efed; --ink-muted:#9fb6b2; --ink-faint:#6f8985;
+      --line:#1e3230; --line-strong:#2a4442;
+      --accent:#4fd1c4; --accent-strong:#7ee0d5; --accent-soft:#123330;
+      --good:#59b788; --good-soft:#123024;
+      --warn:#d8ac55; --warn-soft:#2c2412;
+      --bad:#e2786a; --bad-soft:#2e1815;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0a1615; --surface:#0f1e1c; --surface-2:#132422;
+    --ink:#e7efed; --ink-muted:#9fb6b2; --ink-faint:#6f8985;
+    --line:#1e3230; --line-strong:#2a4442;
+    --accent:#4fd1c4; --accent-strong:#7ee0d5; --accent-soft:#123330;
+    --good:#59b788; --good-soft:#123024;
+    --warn:#d8ac55; --warn-soft:#2c2412;
+    --bad:#e2786a; --bad-soft:#2e1815;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px -12px rgba(0,0,0,0.5);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Newsreader', Georgia, 'Times New Roman', serif;
+    font-size:18px; line-height:1.65; -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent-soft); color:var(--accent-strong); }
+  a{ color:var(--accent-strong); text-decoration-color:var(--line-strong); text-underline-offset:2px; }
+  a:hover{ text-decoration-color:var(--accent); }
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:2px; }
+
+  h1,h2,h3{ font-family:'Archivo', 'Helvetica Neue', Arial, sans-serif; font-weight:700; color:var(--ink); text-wrap:balance; letter-spacing:-0.01em; margin:0; }
+  .mono{ font-family:'IBM Plex Mono', 'SFMono-Regular', Consolas, monospace; font-variant-numeric:tabular-nums; }
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:0.72rem; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-strong); }
+
+  .wrap{ max-width:760px; margin:0 auto; padding:0 24px; }
+  .wide-wrap{ max-width:900px; margin:0 auto; padding:0 24px; }
+  svg{ max-width:100%; height:auto; display:block; }
+
+  /* ---------- Masthead ---------- */
+  .masthead{ border-bottom:1px solid var(--line); padding:64px 0 40px; background:linear-gradient(180deg, var(--surface-2) 0%, var(--bg) 100%); }
+  .masthead .eyebrow{ display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .masthead .eyebrow::before{ content:""; display:inline-block; width:22px; height:2px; background:var(--accent); }
+  h1.title{ font-size:clamp(2.2rem, 5vw, 3.2rem); line-height:1.05; max-width:13ch; }
+  .dek{ margin-top:20px; max-width:58ch; color:var(--ink-muted); font-size:1.15rem; line-height:1.55; }
+  .goal-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-top:28px; }
+  .chip{ font-family:'IBM Plex Mono', monospace; font-size:0.76rem; letter-spacing:0.02em; padding:6px 13px; border-radius:99px; background:var(--surface); border:1px solid var(--line-strong); color:var(--ink-muted); }
+
+  /* ---------- Sections ---------- */
+  section{ padding:56px 0; border-bottom:1px solid var(--line); }
+  section:last-of-type{ border-bottom:none; }
+  .sec-head{ display:flex; gap:16px; align-items:baseline; margin-bottom:22px; }
+  .sec-num{ font-family:'IBM Plex Mono', monospace; font-size:0.85rem; color:var(--ink-faint); border-left:2px solid var(--accent); padding-left:10px; white-space:nowrap; }
+  h2.sec-title{ font-size:clamp(1.5rem, 3vw, 1.9rem); }
+  p{ margin:0 0 1em; }
+  p:last-child{ margin-bottom:0; }
+  h3.sub{ font-size:1.1rem; margin:0 0 8px; }
+
+  .lead-note{ font-size:1.05rem; color:var(--ink-muted); }
+
+  .callout{ background:var(--accent-soft); border:1px solid var(--line); border-left:3px solid var(--accent); border-radius:8px; padding:18px 22px; font-size:1rem; color:var(--ink); margin:26px 0; }
+  .callout b{ color:var(--accent-strong); }
+  .callout p{ margin:0; }
+
+  /* ---------- Figures ---------- */
+  figure{ margin:30px 0; }
+  .fig-panel{ background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:24px 26px 18px; box-shadow:var(--shadow); }
+  figcaption{ margin-top:14px; font-size:0.88rem; color:var(--ink-muted); }
+  figcaption b{ color:var(--ink); font-weight:600; }
+
+  /* ---------- Engine blurbs ---------- */
+  .engine-list{ display:flex; flex-direction:column; gap:0; margin-top:8px; }
+  .engine{ display:grid; grid-template-columns:130px 1fr; gap:20px; padding:20px 0; border-bottom:1px solid var(--line); }
+  .engine:last-child{ border-bottom:none; padding-bottom:0; }
+  .engine:first-child{ padding-top:0; }
+  .engine .name{ font-family:'Archivo', sans-serif; font-weight:700; font-size:1rem; }
+  .engine .name.warn{ color:var(--warn); }
+  .engine p{ color:var(--ink-muted); font-size:0.98rem; }
+
+  /* ---------- Day cards ---------- */
+  .day-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; }
+  @media (max-width: 760px){ .day-grid{ grid-template-columns:1fr; } }
+  .day-card{ background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px; box-shadow:var(--shadow); }
+  .day-card .dh{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
+  .day-card h4{ font-family:'Archivo', sans-serif; font-size:0.98rem; font-weight:700; }
+  .day-card .goal{ font-size:0.74rem; color:var(--accent-strong); font-family:'IBM Plex Mono', monospace; }
+  .day-card p{ font-size:0.9rem; color:var(--ink-muted); }
+
+  /* ---------- Do / Avoid ---------- */
+  .dual{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+  @media (max-width: 640px){ .dual{ grid-template-columns:1fr; } }
+  .col{ border-radius:10px; padding:22px 24px; border:1px solid var(--line); }
+  .col.do{ background:var(--good-soft); border-left:3px solid var(--good); }
+  .col.avoid{ background:var(--bad-soft); border-left:3px solid var(--bad); }
+  .col h3{ font-size:1.02rem; margin-bottom:14px; }
+  .col.do h3{ color:var(--good); }
+  .col.avoid h3{ color:var(--bad); }
+  .col ul{ margin:0; padding:0; list-style:none; display:flex; flex-direction:column; gap:11px; }
+  .col li{ font-size:0.94rem; color:var(--ink); padding-left:20px; position:relative; line-height:1.45; }
+  .col.do li::before{ content:"✓"; position:absolute; left:0; color:var(--good); font-weight:700; }
+  .col.avoid li::before{ content:"✕"; position:absolute; left:0; color:var(--bad); font-weight:700; }
+
+  /* ---------- Glossary ---------- */
+  .glossary{ display:flex; flex-direction:column; gap:0; }
+  .gterm{ display:grid; grid-template-columns:180px 1fr; gap:16px; padding:13px 0; border-bottom:1px solid var(--line); }
+  .gterm:last-child{ border-bottom:none; }
+  .gterm dt{ font-family:'IBM Plex Mono', monospace; font-size:0.85rem; color:var(--accent-strong); font-weight:600; }
+  .gterm dd{ margin:0; font-size:0.92rem; color:var(--ink-muted); }
+
+  footer{ padding:44px 0 76px; color:var(--ink-faint); font-size:0.9rem; }
+  footer a{ color:var(--ink-muted); }
+</style>
+
+<header class="masthead">
+  <div class="wrap">
+    <div class="eyebrow">A Training Guide</div>
+    <h1 class="title">The Returning Swimmer</h1>
+    <p class="dek">You already know how to swim. What's missing is the engine. A simple mental model for structuring each session, each week, and rebuilding a real aerobic base — for someone who trained seriously once, took years off, and is back in the water now.</p>
+    <div class="goal-chips">
+      <span class="chip">General health</span>
+      <span class="chip">Endurance</span>
+      <span class="chip">Sprint speed</span>
+      <span class="chip">Steady state — no HR max-out</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ AT A GLANCE ============ -->
+  <section>
+    <div class="wrap">
+      <div class="fig-panel">
+        <div class="eyebrow" style="margin-bottom:16px;">At a Glance — Six Tenets</div>
+        <div class="engine-list">
+          <div class="engine"><span class="name mono">1</span><p>Everything you swim runs on one of three engines — mostly <b>easy</b> (aerobic), rarely the "comfortably hard" <b>grey zone</b>, sometimes genuinely <b>all-out</b> (sprint).</p></div>
+          <div class="engine"><span class="name mono">2</span><p>Every session has one job: warm up, drill technique while fresh, commit the main set to a single engine, cool down.</p></div>
+          <div class="engine"><span class="name mono">3</span><p>Across a week, rotate the job by session — aerobic base + technique, speed, steady-state distance.</p></div>
+          <div class="engine"><span class="name mono">4</span><p>Across a season, work in roughly 4–6 week waves — base, then sharpen, then base again — not one straight line.</p></div>
+          <div class="engine"><span class="name mono">5</span><p><b>Steady state</b> means heart rate holds flat at a pace instead of climbing to its ceiling — test it, then expand it patiently.</p></div>
+          <div class="engine"><span class="name mono">6</span><p>You're rebuilding, not starting over — a real training history gives you a floor above a true beginner's, even though stroke feel and cardiovascular fitness return on their own separate timelines.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ READ FIRST ============ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">00</span><h2 class="sec-title">Read this first</h2></div>
+      <p class="lead-note">In your teenage years your body already built efficient stroke mechanics and a strong <b>aerobic engine</b> — the cardiovascular and metabolic conditioning that lets you hold a hard pace for a long time without your heart rate climbing to its ceiling. Getting back in the water doesn't start you from zero: a genuine training history leaves a real physiological floor above a true beginner's, on both counts. What isn't settled is whether stroke feel or cardiovascular fitness comes back faster — treat them as two separate rebuilds on their own timelines, each taking months of patient, specific work, rather than assuming one arrives first.</p>
+      <p class="lead-note">The single most common mistake for a returning competitive swimmer is training at the intensity their <em>technique</em> still allows, rather than the intensity their <em>current engine</em> can sustain. That gap is where plateaus, staleness, and shoulder injuries live. This guide is built around closing it deliberately.</p>
+    </div>
+  </section>
+
+  <!-- ============ THREE ENGINES ============ -->
+  <section>
+    <div class="wide-wrap">
+      <div class="sec-head"><span class="sec-num">01</span><h2 class="sec-title">The three engines</h2></div>
+      <p class="lead-note" style="max-width:66ch;">Every set you swim runs on one of three engines. Knowing which one you're running — and how much time to spend on each — is the single most useful idea in this guide.</p>
+
+      <figure>
+        <div class="fig-panel">
+          <svg viewBox="0 0 900 340" role="img" aria-label="A horizontal bar divided into three unequal segments: a wide, accent-colored Aerobic Engine segment on the left, a narrow, neutral-grey Grey Zone segment in the middle called out above the bar with a leader line and marked to minimize, and a medium, accent-colored Sprint Engine segment on the right.">
+            <!-- bar segments: aerobic 0-540 (60%), grey 540-630 (10%), sprint 630-900 (30%) -->
+            <g>
+              <rect x="0" y="120" width="536" height="64" rx="8" fill="var(--accent)" opacity="0.14" stroke="var(--accent)" stroke-opacity="0.6"></rect>
+              <rect x="542" y="120" width="86" height="64" rx="8" fill="currentColor" opacity="0.08" stroke="currentColor" stroke-opacity="0.35"></rect>
+              <rect x="634" y="120" width="266" height="64" rx="8" fill="var(--accent)" opacity="0.14" stroke="var(--accent)" stroke-opacity="0.6"></rect>
+            </g>
+            <!-- grey-zone callout, above the bar (its own slice is too narrow for inline text) -->
+            <line x1="585" y1="70" x2="585" y2="120" stroke="currentColor" stroke-opacity="0.4"></line>
+            <circle cx="585" cy="120" r="3.5" fill="currentColor" opacity="0.5"></circle>
+            <g text-anchor="middle" font-family="IBM Plex Mono, monospace">
+              <text x="585" y="18" font-size="13" font-weight="600" fill="var(--bad)">⚠ GREY ZONE — minimize</text>
+              <text x="585" y="38" font-size="12" fill="currentColor" opacity="0.7">comfortably hard, holds ~20–60min</text>
+              <text x="585" y="56" font-size="12" fill="var(--bad)" opacity="0.9">feels productive, builds little</text>
+            </g>
+            <!-- segment titles -->
+            <g font-family="Archivo, sans-serif" font-weight="700" font-size="16">
+              <text x="20" y="210" fill="var(--accent-strong)">AEROBIC ENGINE</text>
+              <text x="638" y="210" fill="var(--accent-strong)">SPRINT ENGINE</text>
+            </g>
+            <!-- share labels -->
+            <g font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" opacity="0.6">
+              <text x="20" y="136" dominant-baseline="middle">~most of the week</text>
+              <text x="634" y="136" dominant-baseline="middle">~a smaller slice</text>
+            </g>
+            <!-- descriptions -->
+            <g font-family="Newsreader, serif" font-size="14" fill="currentColor" opacity="0.75">
+              <text x="20" y="235">easy, conversational</text>
+              <text x="20" y="254">holds for 30min–hours</text>
+              <text x="20" y="273">builds: endurance, steady state</text>
+
+              <text x="638" y="235">all-out</text>
+              <text x="638" y="254">holds for seconds–2min</text>
+              <text x="638" y="273">builds: speed, power</text>
+            </g>
+            <!-- bottom axis label -->
+            <line x1="0" y1="305" x2="900" y2="305" stroke="currentColor" stroke-opacity="0.25"></line>
+            <text x="0" y="325" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity="0.5">easier</text>
+            <text x="866" y="325" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity="0.5">harder</text>
+          </svg>
+        </div>
+        <figcaption>The bar's width encodes roughly how much of your total swimming time should sit in each engine. <b>The grey zone is drawn deliberately narrow</b> — it's the "comfortably hard" pace that feels like real training because you're breathing hard, but a controlled trial found swimmers who lived there improved less, and got more tired, than swimmers who spent most of their time easy plus a smaller genuinely-hard slice.</figcaption>
+      </figure>
+
+      <div class="callout"><b>Steady state, plainly:</b> it's what happens when a swim stays entirely inside the aerobic engine even as the distance gets long — heart rate holds flat instead of climbing toward its ceiling. Everything in this guide points toward widening that engine.</div>
+    </div>
+  </section>
+
+  <!-- ============ WITHIN A SESSION ============ -->
+  <section>
+    <div class="wide-wrap">
+      <div class="sec-head"><span class="sec-num">02</span><h2 class="sec-title">Structure within one session</h2></div>
+      <p class="lead-note" style="max-width:66ch;">No matter which engine is the day's focus, every session follows the same shape.</p>
+
+      <figure>
+        <div class="fig-panel">
+          <svg viewBox="0 0 900 190" role="img" aria-label="A left-to-right flow of four boxes: Warm up, Skill, Main Work, Cooldown, connected by arrows, each labeled with its purpose and a rough share of the session's time.">
+            <defs>
+              <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                <path d="M0,0 L10,5 L0,10 z" fill="currentColor" opacity="0.5"></path>
+              </marker>
+            </defs>
+            <g font-family="Archivo, sans-serif" font-weight="700" font-size="15">
+              <rect x="10" y="30" width="180" height="60" rx="9" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-opacity="0.4"></rect>
+              <text x="100" y="65" text-anchor="middle" fill="currentColor">WARM UP</text>
+
+              <rect x="240" y="30" width="180" height="60" rx="9" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-opacity="0.4"></rect>
+              <text x="330" y="65" text-anchor="middle" fill="currentColor">SKILL</text>
+
+              <rect x="470" y="30" width="220" height="60" rx="9" fill="var(--accent)" opacity="0.14" stroke="var(--accent)" stroke-opacity="0.7"></rect>
+              <text x="580" y="65" text-anchor="middle" fill="var(--accent-strong)">MAIN WORK</text>
+
+              <rect x="740" y="30" width="150" height="60" rx="9" fill="currentColor" opacity="0.06" stroke="currentColor" stroke-opacity="0.4"></rect>
+              <text x="815" y="65" text-anchor="middle" fill="currentColor">COOLDOWN</text>
+            </g>
+            <g stroke="currentColor" stroke-width="1.6" marker-end="url(#arrow)">
+              <line x1="190" y1="60" x2="236" y2="60"></line>
+              <line x1="420" y1="60" x2="466" y2="60"></line>
+              <line x1="690" y1="60" x2="736" y2="60"></line>
+            </g>
+            <g font-family="Newsreader, serif" font-size="13" fill="currentColor" opacity="0.7">
+              <text x="100" y="115" text-anchor="middle">wake up, easy</text>
+              <text x="330" y="115" text-anchor="middle">fresh, one cue</text>
+              <text x="580" y="115" fill="var(--accent-strong)" text-anchor="middle">pick ONE engine</text>
+              <text x="815" y="115" text-anchor="middle">easy, come down</text>
+            </g>
+            <g font-family="IBM Plex Mono, monospace" font-size="12" fill="currentColor" opacity="0.5">
+              <text x="100" y="140" text-anchor="middle">~10min</text>
+              <text x="330" y="140" text-anchor="middle">~15min</text>
+              <text x="580" y="140" text-anchor="middle">~25–30min</text>
+              <text x="815" y="140" text-anchor="middle">~5–10min</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>Skill work always comes <b>before</b> the main work, while you're still fresh — practicing a new cue while already tired has been shown to teach it worse, not just execute it worse.</figcaption>
+      </figure>
+
+      <div class="callout"><b>One session, one primary job.</b> Trying to build aerobic base <em>and</em> chase top speed <em>and</em> grind technique in the same hour is how you end up merely tired in all three, and good at none. Let the main work section commit to a single engine.</div>
+    </div>
+  </section>
+
+  <!-- ============ ACROSS A WEEK ============ -->
+  <section>
+    <div class="wide-wrap">
+      <div class="sec-head"><span class="sec-num">03</span><h2 class="sec-title">Structure across a week</h2></div>
+      <p class="lead-note" style="max-width:66ch;">With three sessions a week, spread the three jobs across them rather than mixing all three into every session.</p>
+
+      <div class="day-grid">
+        <div class="day-card">
+          <div class="dh"><h4>Session 1</h4><span class="goal">aerobic engine</span></div>
+          <p>Easy volume plus technique work. This is where the steady-state base actually gets built — most of the session sits in the wide left band of the engine diagram above.</p>
+        </div>
+        <div class="day-card">
+          <div class="dh"><h4>Session 2</h4><span class="goal">sprint engine</span></div>
+          <p>Short, genuinely maximal efforts with real recovery between them (60–90s+), bridged in gradually from a technique cue at rising speed — not a flat-out swim from a cold start.</p>
+        </div>
+        <div class="day-card">
+          <div class="dh"><h4>Session 3</h4><span class="goal">steady-state distance</span></div>
+          <p>The longest continuous or lightly-broken swim of the week, at a pace deliberately chosen to keep heart rate flat — this is the session that directly trains and tests the steady-state goal.</p>
+        </div>
+      </div>
+
+      <p style="margin-top:26px;">Add the three sessions up over a full week and roughly <b>80% of your total swimming time should be easy</b> (Session 1's aerobic work plus the easy portions of the other two), with a smaller slice genuinely hard, and as little as possible spent in the grey zone. That "80/20" split is a well-known simplification used across endurance sports — the underlying swim-specific trial found a similar mix (mostly easy, a touch of moderate, a meaningful chunk hard) outperformed a moderate-heavy week on both improvement <em>and</em> fatigue.</p>
+    </div>
+  </section>
+
+  <!-- ============ ACROSS A SEASON ============ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">04</span><h2 class="sec-title">Structure across a season</h2></div>
+      <p class="lead-note">Training in one unbroken straight line for months either flattens out or breaks something. Think in waves instead: a stretch of mostly widening the aerobic base, then a stretch that leans harder into speed and steady-state distance <em>on top of</em> that base, then back to base-building before it starts to fray. With no meet on the calendar to count backward from, just let each wave run roughly <b>4–6 weeks</b> before shifting emphasis — and don't be afraid to extend a base-building wave if progress is still coming; there's no clock forcing you to rush it.</p>
+    </div>
+  </section>
+
+  <!-- ============ STEADY STATE ============ -->
+  <section>
+    <div class="wide-wrap">
+      <div class="sec-head"><span class="sec-num">05</span><h2 class="sec-title">The steady-state goal, explained</h2></div>
+      <p class="lead-note" style="max-width:66ch;">If you swim at a pace beyond what your current aerobic engine can sustain, your heart rate creeps upward over the swim even though the pace and effort feel constant — eventually it hits its ceiling and forces you to slow down or stop. This drift is sometimes called <b>decoupling</b>: pace stays flat, heart rate doesn't. The mechanism itself is well-confirmed physiology, including a direct swimming-specific study — but the exact numeric "decoupling %" thresholds some coaching apps report are a practitioner heuristic, not something research has validated. Use the flat-vs-climbing comparison below, not a specific percentage.</p>
+
+      <figure>
+        <div class="fig-panel">
+          <svg viewBox="0 0 900 260" role="img" aria-label="Two illustrative panels comparing heart rate over the course of a steady swim. Before: heart rate climbs steadily even though pace stays flat. After: heart rate holds flat alongside pace, once the aerobic engine has been built for that pace.">
+            <!-- Panel A: Before -->
+            <g>
+              <text x="10" y="24" font-family="Archivo, sans-serif" font-weight="700" font-size="14" fill="var(--bad)">BEFORE — aerobic base too narrow</text>
+              <line x1="10" y1="180" x2="410" y2="180" stroke="currentColor" stroke-opacity="0.3"></line>
+              <line x1="10" y1="40" x2="10" y2="180" stroke="currentColor" stroke-opacity="0.3"></line>
+              <!-- pace: flat dashed -->
+              <polyline points="10,130 410,130" fill="none" stroke="currentColor" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 5"></polyline>
+              <text x="330" y="122" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity="0.6">pace (flat)</text>
+              <!-- HR: rising curve -->
+              <path d="M 10 150 C 120 148, 200 120, 280 85 C 330 65, 370 50, 410 42" fill="none" stroke="var(--bad)" stroke-width="2.6" stroke-linecap="round"></path>
+              <circle cx="410" cy="42" r="4.5" fill="var(--bad)"></circle>
+              <text x="330" y="58" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--bad)">HR (climbing)</text>
+              <text x="10" y="200" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity="0.5">start</text>
+              <text x="380" y="200" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity="0.5">end</text>
+            </g>
+            <!-- Panel B: After -->
+            <g transform="translate(480,0)">
+              <text x="10" y="24" font-family="Archivo, sans-serif" font-weight="700" font-size="14" fill="var(--accent-strong)">AFTER — aerobic base built for this pace</text>
+              <line x1="10" y1="180" x2="410" y2="180" stroke="currentColor" stroke-opacity="0.3"></line>
+              <line x1="10" y1="40" x2="10" y2="180" stroke="currentColor" stroke-opacity="0.3"></line>
+              <polyline points="10,130 410,130" fill="none" stroke="currentColor" stroke-opacity="0.55" stroke-width="2" stroke-dasharray="5 5"></polyline>
+              <text x="330" y="122" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity="0.6">pace (flat)</text>
+              <path d="M 10 150 C 150 149, 280 147, 410 145" fill="none" stroke="var(--accent)" stroke-width="2.6" stroke-linecap="round"></path>
+              <circle cx="410" cy="145" r="4.5" fill="var(--accent)"></circle>
+              <text x="330" y="167" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--accent-strong)">HR (flat)</text>
+              <text x="10" y="200" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity="0.5">start</text>
+              <text x="380" y="200" font-family="IBM Plex Mono, monospace" font-size="11" fill="currentColor" opacity="0.5">end</text>
+            </g>
+          </svg>
+        </div>
+        <figcaption>Illustrative, not measured data. Same pace, two different states of the aerobic engine — one drifts toward its ceiling, one doesn't. The goal isn't a faster pace first; it's turning the left panel into the right one <em>at your current pace</em>, then repeating the process at a slightly faster one.</figcaption>
+      </figure>
+
+      <h3 class="sub">A simple protocol to build and test it</h3>
+      <div class="engine-list">
+        <div class="engine"><span class="name mono">1</span><p>Pick a pace that feels genuinely easy — conversational, form intact, no strain.</p></div>
+        <div class="engine"><span class="name mono">2</span><p>Swim continuously at that pace. Check your heart rate (a 10-second pulse count, or a swim-rated strap) roughly a third of the way through, and again near the end.</p></div>
+        <div class="engine"><span class="name mono">3</span><p>Close readings → you're in steady state at that pace and distance. Next time, gently extend the distance, or nudge the pace.</p></div>
+        <div class="engine"><span class="name mono">4</span><p>A noticeably higher late reading → that combination is currently above your ceiling. Keep the distance, back off the pace, and retest later.</p></div>
+        <div class="engine"><span class="name mono">5</span><p>Repeat over months. The pace/distance where the line stays flat should keep expanding — that expansion <em>is</em> the goal, made measurable.</p></div>
+      </div>
+
+      <div class="callout"><b>This is also, almost exactly, general cardiovascular health training.</b> Widening the aerobic base doesn't trade off against the "general health" goal — it's the same work, so all four goals in this guide point in the same direction.</div>
+    </div>
+  </section>
+
+  <!-- ============ DO / AVOID ============ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">06</span><h2 class="sec-title">Do this. Avoid this.</h2></div>
+      <div class="dual">
+        <div class="col do">
+          <h3>Do</h3>
+          <ul>
+            <li>Spend most pool minutes at a genuinely easy, conversational effort — most sessions, most of each session.</li>
+            <li>Track something — a fixed-pace pulse check, a stroke count, a benchmark swim — so you can tell "harder" from "better."</li>
+            <li>Do technique work first, every session, while fresh.</li>
+            <li>Give real sprint efforts real recovery — 60–90s or more — so each one stays high quality.</li>
+            <li>Increase volume or pace in small steps, over months, not weeks.</li>
+            <li>Warm up fully before anything hard.</li>
+            <li>Let each session commit to one primary job.</li>
+          </ul>
+        </div>
+        <div class="col avoid">
+          <h3>Avoid</h3>
+          <ul>
+            <li>Swimming most sets at the "comfortably hard" grey-zone effort by default.</li>
+            <li>Chasing the pace you held twenty years ago — your fitness and your technique rebuild on their own separate timelines, and it's not settled which comes back faster.</li>
+            <li>Drilling technique at the end of a tired, hard set.</li>
+            <li>Judging a session only by how tired you feel — grey-zone effort feels hard and teaches little; aerobic-base effort feels easy and is exactly right.</li>
+            <li>Ignoring a heart rate that keeps climbing during a "steady" swim — that's information, not weakness.</li>
+            <li>Stacking hard days back to back, or skipping rest days.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ COMING BACK ============ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">07</span><h2 class="sec-title">A note on coming back after years away</h2></div>
+      <p class="lead-note"><b>Your shoulders are the first bill that comes due.</b> A returning swimmer's stroke often lets them do more volume than their tendons and rotator cuffs are currently conditioned for — the classic overuse pattern in this sport. The research on swim shoulder injuries is real but, by its own authors' admission, too weak to pin down an exact safe volume cutoff for any age group — so treat "build volume gradually, back off at the first twinge" as prudent caution, not a precise rule with a validated number behind it. A few minutes of dryland work before you get in the water is worth adding on general principle, even without a validated dose: thoracic mobility (open-book stretches, foam rolling) to keep the upper back rotating instead of the shoulder overcompensating, rotator-cuff and scapular-stabilizer activation (banded external rotations, Y-T-W raises) since these are the muscles that fatigue and let the joint drift out of position, and core anti-rotation work (side planks) so the trunk, not the shoulder, absorbs stroke torque.</p>
+      <p class="lead-note"><b>Ignore the ghost of your younger self.</b> Comparing today's pace to a personal best from decades ago is demoralizing and not useful — the only comparison that matters is your own trend over the coming months.</p>
+      <p class="lead-note"><b>Patience compounds — and you're not starting from zero.</b> Detraining research on previously well-trained athletes is genuinely encouraging here: fitness built over a real training history doesn't fully disappear even after years off. Both cardiovascular and muscular adaptations decline but plateau above where a true beginner starts — you're rebuilding from a real foundation, not from scratch. Whether stroke feel or cardiovascular fitness comes back faster isn't something research has directly compared, so give both the time they need rather than assuming one arrives first.</p>
+    </div>
+  </section>
+
+  <!-- ============ GLOSSARY ============ -->
+  <section>
+    <div class="wrap">
+      <div class="sec-head"><span class="sec-num">08</span><h2 class="sec-title">Quick glossary</h2></div>
+      <dl class="glossary">
+        <div class="gterm"><dt>Aerobic engine</dt><dd>Effort your body can fuel with oxygen alone — sustainable for a long time.</dd></div>
+        <div class="gterm"><dt>Grey zone / threshold</dt><dd>Comfortably-hard effort at the edge of sustainable. Useful in small doses; overused by instinct.</dd></div>
+        <div class="gterm"><dt>Sprint / anaerobic</dt><dd>Effort beyond what oxygen alone can fuel — only sustainable for seconds to a couple of minutes.</dd></div>
+        <div class="gterm"><dt>Steady state</dt><dd>A pace and distance where heart rate holds flat rather than drifting upward.</dd></div>
+        <div class="gterm"><dt>Decoupling / drift</dt><dd>When heart rate climbs at a constant pace — a sign the aerobic engine isn't yet built for that pace.</dd></div>
+        <div class="gterm"><dt>CSS</dt><dd>Critical Swim Speed — a simple pace benchmark from a 400m plus a 200m time trial.</dd></div>
+        <div class="gterm"><dt>RPE</dt><dd>Rate of perceived exertion — how hard something felt, on a scale of 1–10.</dd></div>
+      </dl>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    This guide distills the research and season-log audit behind it into a simpler day-to-day model, including a supplementary research pass on detraining, cardiac drift, and return-to-training injury risk. For literal weekly sets, full source citations, and progress-tracking detail, see the companion document, <a href="https://claude.ai/code/artifact/eee8fa7b-3e1c-4eac-999d-95b2ed14c9d4" target="_blank" rel="noopener">Garpar Training Audit</a>, or the consolidated <span class="mono">research_findings.md</span> in the project folder.
+  </div>
+</footer>
