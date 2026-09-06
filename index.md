@@ -19,6 +19,7 @@ Individual session plans, one file per date, in [`practices/`](practices/) — g
 ## Other
 
 - [`research/gemini/`](research/gemini/) — an independent Gemini research export, kept for posterity, alongside [Second Opinion](research/gemini/second-opinion.html), the cross-check of it against this project's own findings.
+- **[BACKLOG.md](BACKLOG.md)** — ideas and alternatives considered but not acted on.
 
 ---
 

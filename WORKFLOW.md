@@ -8,7 +8,7 @@ A step-by-step reference for how this project actually runs — usable by a futu
 
 ## 2. How a practice session gets generated
 
-**Weekly rotation:** Monday = Technique + Aerobic Base, Wednesday = Speed Bridge (sprint), Saturday = Race Distance (endurance) — three sessions a week, one hour each, matching the three archetypes below. If asked for "the next practice" without a type specified, work it out rather than asking: check the target date's day-of-week against this rotation, and check [`practices/index.md`](practices/index.md) for what's already logged so the same slot isn't generated twice.
+**Weekly rotation:** Monday = Technique + Aerobic Base, Wednesday = Speed Bridge (sprint), Saturday = Race Distance (endurance) — three sessions a week, one hour each, matching the three archetypes below. If asked for "the next practice" without a type specified, work it out rather than asking: check the target date's day-of-week against this rotation, and check [`practices/index.md`](practices/index.md) for what's already logged so the same slot isn't generated twice. (An alternative rotation was considered and deliberately set aside — see [`BACKLOG.md`](BACKLOG.md) — this one stays current unless told otherwise.)
 
 1. Start from the framework in [`guides/training-framework.html`](guides/training-framework.html) — it defines three session archetypes (technique + aerobic base / speed-bridge / race-distance-endurance) and the principles behind them (polarized effort distribution, technique-fresh-before-fatigue, real recovery for max effort, etc.).
 2. Apply whatever the user specifies for that day beyond the default: a different archetype, time cap, distance cap, equipment notes.

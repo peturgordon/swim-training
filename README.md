@@ -22,7 +22,7 @@ Individual session plans, one file per date, in [`practices/`](practices/) — g
 
 - [`research/gemini/`](research/gemini/) — an independent Gemini research export, kept for posterity, alongside [Second Opinion](research/gemini/second-opinion.html), the cross-check of it against this project's own findings.
 
-See [WORKFLOW.md](WORKFLOW.md) for the full step-by-step process — how a practice gets generated, and exactly how to publish a change.
+See [WORKFLOW.md](WORKFLOW.md) for the full step-by-step process — how a practice gets generated, and exactly how to publish a change. [BACKLOG.md](BACKLOG.md) has ideas considered but not acted on.
 
 ## Publishing
 
