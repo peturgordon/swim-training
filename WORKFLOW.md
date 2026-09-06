@@ -15,6 +15,9 @@ A step-by-step reference for how this project actually runs — usable by a futu
 3. Write the session using this section order and style (see [`practices/2026-09-05.md`](practices/2026-09-05.md) or [`practices/2026-09-07.md`](practices/2026-09-07.md) for real examples):
    - `# YYYY-MM-DD — <session name>`, then total time/distance
    - `## Warmup`, `## Technique`, `## Bridge` (if applicable), `## Main set`, `## Cooldown` — each with its own meterage
+   - `## Metrics to capture` — **required in every session, not optional.** What to measure, when (which specific set/rep, not just "sometime"), and how to actually record it poolside:
+     - **What/when**, by archetype: Technique + Aerobic Base → stroke count per 25m at a fixed pace during the aerobic main set. Speed Bridge → RPE or a 10s pulse count immediately after the max-effort reps. Race Distance → stroke count held across the fatiguing main set, start vs. end (the single most evidence-grounded metric in the framework), plus RPE/HR.
+     - **How, to begin with** (see [`BACKLOG.md`](BACKLOG.md) — the long-term method is still an open question): a phone in a waterproof pouch left at the wall, typed or voice-memoed the moment it happens or during the next rest interval — not relying on memory until after the session.
    - `## Notes` — equipment choices and why, tied back to [`research_findings.md`](research/research_findings.md) where relevant
 4. Save as `practices/YYYY-MM-DD.md`.
 5. **Add a link to the new file at the top of [`practices/index.md`](practices/index.md)** (newest first) — this is not automatic; GitHub Pages 404s on [`practices/`](practices/) without it.
