@@ -28,12 +28,6 @@ The "how" side is now researched and answered — see [`research/poolside_tools.
 
 The plan is to capture metrics poolside somehow (see above), then periodically aggregate results into a CSV or similar in this repo to track progress over the season — but nothing defines what that file looks like yet: no fixed column names, no location, no process for turning a practice file's prose "Metrics to capture" section into a structured row. Each archetype tracks different things (stroke count for Technique/Race Distance days, RPE/pulse for Speed Bridge days), so the schema needs to accommodate that rather than force one flat table. Worth settling column names and format before there are several weeks of inconsistently-worded entries to reconcile by hand.
 
-## Calibrating a real personal heart-rate-zone table
-
-[Training Framework](guides/training-framework.html#framework) now carries a provisional z1–z2 pulse ceiling (~120bpm / ~20 beats per 10s) after the 2026-09-07 technique session ran a 10s pulse count of 26 (~156bpm) during the aerobic main — noticeably above that anchor. But the anchor itself is thin: it's pulled from two anecdotal mentions in the Garpar group log (z2 ~120bpm in one session, z3 ~150bpm in another), not measured on Petur specifically, and not a validated zone table.
-
-Worth replacing with a real one: capture resting heart rate and a genuine max-effort heart-rate reading (e.g. right after the hardest rep of a Speed Bridge day, or during/after the next CSS time trial) to calculate actual personal zones, rather than continuing to check sessions against a number borrowed from someone else's log entry.
-
 ## Evolving the training over the season
 
 How should sessions change as fitness genuinely improves — raising the distance cap, tightening target paces, shifting the effort-zone balance — separate from what happens if a target meet or endurance event gets added to the calendar? [Training Framework](guides/training-framework.html#framework)'s own principle 6 (train in blocks, not a straight line) and its "meet calendar" open question already flag the meet-driven side of this as an acknowledged evidence gap. This is the broader version: ongoing progression logic even with no meet in sight, and how the CSS retest already recommended every 6–8 weeks should actually feed back into adjusting the framework, rather than just being logged and left there.
