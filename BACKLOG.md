@@ -28,6 +28,12 @@ The "how" side is now researched and answered — see [`research/poolside_tools.
 
 The plan is to capture metrics poolside somehow (see above), then periodically aggregate results into a CSV or similar in this repo to track progress over the season — but nothing defines what that file looks like yet: no fixed column names, no location, no process for turning a practice file's prose "Metrics to capture" section into a structured row. Each archetype tracks different things (stroke count for Technique/Race Distance days, RPE/pulse for Speed Bridge days), so the schema needs to accommodate that rather than force one flat table. Worth settling column names and format before there are several weeks of inconsistently-worded entries to reconcile by hand.
 
+## Calibrating a real personal heart-rate-zone table
+
+The framework's zones are pace/CSS-based, not heart-rate-based, and no validated numeric HR-zone table exists for masters swimmers specifically. A single-pass (non-adversarially-verified) research pass — see [`research/heart_rate_zones.md`](research/heart_rate_zones.md) — worked out an age-formula-based z1–z5 bpm table for age 43–44 (Tanaka formula, ~178bpm estimated max) and traced the log's "z1 white … z5 purple" naming to Jon Urbanchek's color system, whose absolute bpm values are calibrated for young elite swimmers, not scaled to age — a likely explanation for why the earlier anecdotal ~120bpm anchor (logged then reverted 2026-09-08) read as too low against a real pulse count.
+
+Still open: the formula-based table is a placeholder, not a personal measurement. A real resting HR + a genuine max-effort HR reading (e.g. right after the hardest rep of a Speed Bridge day, or during/after the next CSS time trial) would replace it with an actual personal number.
+
 ## Evolving the training over the season
 
 How should sessions change as fitness genuinely improves — raising the distance cap, tightening target paces, shifting the effort-zone balance — separate from what happens if a target meet or endurance event gets added to the calendar? [Training Framework](guides/training-framework.html#framework)'s own principle 6 (train in blocks, not a straight line) and its "meet calendar" open question already flag the meet-driven side of this as an acknowledged evidence gap. This is the broader version: ongoing progression logic even with no meet in sight, and how the CSS retest already recommended every 6–8 weeks should actually feed back into adjusting the framework, rather than just being logged and left there.
