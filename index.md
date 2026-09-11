@@ -12,6 +12,7 @@ An evidence-checked masters swim training project: research on technique, endura
 - **[research_findings.md](research/research_findings.md)** — the full research corpus behind the guides: every adversarially-verified claim, what was explicitly refuted, sources, and open questions, across multiple research passes (core training science, detraining/decoupling/injury risk, equipment usage).
 - **[garpar_sundaefingar_2025-2026.md](research/garpar_sundaefingar_2025-2026.md)** — the source training log analyzed above (66 sessions, Icelandic, Sept 2025–May 2026).
 - **[poolside_tools.md](research/poolside_tools.md)** — product research (not scientific-claim verification) on capturing metrics mid-session and budget waterproof stopwatches/watches for occasional timed tests.
+- **[heart_rate_zones.md](research/heart_rate_zones.md)** — single-pass research (not adversarially verified) estimating z1–z5 heart-rate zones for a 43–44 year-old masters swimmer.
 
 ## Practices
 
