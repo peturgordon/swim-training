@@ -45,8 +45,11 @@ two dropdowns above the practice outline. They're remembered across runs
 usually at the same pool session after session, but stay editable per file.
 
 Repo layout this script expects: itself in <repo>/software_utils/, HR
-recordings (and their exports) in the sibling <repo>/metrics/, matched
-practice write-ups in <repo>/practices/YYYY-MM-DD.md.
+recordings (and their exports) in <repo>/biometrics/<contributor>/ (one
+subfolder per person -- "ph" today), matched practice write-ups in
+<repo>/practices/YYYY-MM-DD.md. The recording's own path is what's used to
+find the repo root and the matching practice file (see find_repo_root),
+not this script's location, so any nesting depth under biometrics/ works.
 
 Export writes two files next to the recording, named deterministically
 from ITS OWN filename -- there's no save dialog, on purpose, so a later
@@ -65,13 +68,19 @@ auto-added after the last confirm -- are left out of both exports
 entirely. If two segments overlap, the later one in the table wins for any
 sample in the overlap.
 
+Opening a recording that already has a "<name>_segments.csv" (or, failing
+that, a "<name>_annotated.csv") sitting next to it loads those CONFIRMED
+segments straight back into the table, sorted by start, plus one fresh
+undefined spare at the end -- so a mislabeled start/end can be fixed and
+re-exported without re-labeling the whole session from scratch.
+
 Usage:
     python3 hr_labeler.py [path/to/Pool Swim-Heart Rate-*.csv]
 
-If no path is given, the newest *.csv in ../metrics is used (excluding any
-previously-exported *_segments.csv/*_annotated.csv files). A different
-recording can also be opened later via the "Load CSV..." button, without
-restarting.
+If no path is given, the newest *.csv in ../biometrics/ph is used
+(excluding any previously-exported *_segments.csv/*_annotated.csv files).
+A different recording can also be opened later via the "Load CSV..."
+button, without restarting.
 
 Requires: pandas, matplotlib, PyQt6
 """
@@ -163,12 +172,26 @@ class _EnterConfirmDelegate(QStyledItemDelegate):
         return super().eventFilter(editor, event)
 
 
+def find_repo_root(start_path):
+    """Walk upward from start_path looking for the repo root (a directory
+    containing .git) -- rather than hardcoding a fixed number of parent
+    hops, which breaks silently the moment the recording moves one level
+    deeper (e.g. biometrics/<name>/ instead of metrics/). Falls back to
+    start_path's own parent if no .git is found (e.g. a bare checkout),
+    since something reasonable beats raising."""
+    p = Path(start_path).resolve()
+    for candidate in [p, *p.parents]:
+        if (candidate / ".git").exists():
+            return candidate
+    return p.parent
+
+
 def find_practice_md(csv_path, date_str):
-    """Look for practices/YYYY-MM-DD.md as a sibling of the recording's own
-    metrics/ folder (repo layout: <repo>/metrics/, <repo>/practices/) --
-    derived from csv_path, not this script's own location. Shown verbatim
-    as reference text only -- nothing here is parsed."""
-    repo_root = Path(csv_path).resolve().parent.parent
+    """Look for practices/YYYY-MM-DD.md at the repo root, however deep the
+    recording itself is nested (repo layout: <repo>/practices/) -- derived
+    from csv_path, not this script's own location. Shown verbatim as
+    reference text only -- nothing here is parsed."""
+    repo_root = find_repo_root(csv_path)
     candidate = repo_root / "practices" / f"{date_str}.md"
     return candidate if candidate.exists() else None
 
@@ -240,8 +263,123 @@ class LabelerWindow(QMainWindow):
 
         self._reset_segment_state()
         self._plot_base()
-        self._add_new_segment()
+        self.segments, source_name = self._load_existing_export()
+        if source_name is not None:
+            self.segment_count_label.setText(
+                f"Loaded {len(self.segments)} confirmed segment(s) from {source_name} -- "
+                f"fix a mislabeled one by clicking its row, then re-export when done.")
+        else:
+            self.segment_count_label.setText(
+                "Starts with one segment; confirming the last one adds a new one.")
+        self._add_new_segment()  # trailing spare -- always exactly one undefined segment ready
+        self.active_idx = 0
         self._render_active()
+
+    def _load_existing_export(self):
+        """If this recording already has a previously exported
+        <stem>_segments.csv (preferred -- exact, structured) or, failing
+        that, a <stem>_annotated.csv (reconstructed by grouping contiguous
+        tracked rows) sitting next to it, load those CONFIRMED segments
+        back into the table instead of starting from scratch. Lets a
+        mislabeled start/end get fixed and re-exported without re-labeling
+        the whole session. Returns (segments, source_filename_or_None) --
+        segments is [] and source is None if neither file exists."""
+        p = Path(self.csv_path)
+        summary_path = p.with_name(p.stem + "_segments.csv")
+        annotated_path = p.with_name(p.stem + "_annotated.csv")
+        if summary_path.exists():
+            return self._segments_from_summary_csv(summary_path), summary_path.name
+        if annotated_path.exists():
+            return self._segments_from_annotated_csv(annotated_path), annotated_path.name
+        return [], None
+
+    @staticmethod
+    def _clean_str(value, default=""):
+        """NaN -> default. A whole-number float -> its plain int string --
+        _annotated.csv's distance column round-trips a typed "75" as the
+        float 75.0 on re-read (pandas infers dtype per-column, and a blank
+        cell alongside plain numbers forces float), so undo that rather
+        than showing "75.0" back in the table."""
+        if pd.isna(value):
+            return default
+        if isinstance(value, float) and value == int(value):
+            return str(int(value))
+        return str(value)
+
+    def _segment_from_export_row(self, stroke, distance, pull_buoy, fins, paddles, kickboard,
+                                  start_ts, end_ts):
+        distance = self._clean_str(distance)
+        if distance.lower().endswith(" m"):
+            distance = distance[: -len(" m")]  # _segments.csv adds the unit; the table doesn't
+        return {
+            "stroke": self._clean_str(stroke, STROKE_OPTIONS[0]),
+            "distance": distance,
+            "pull_buoy": bool(pull_buoy), "fins": bool(fins),
+            "paddles": bool(paddles), "kickboard": bool(kickboard),
+            "start": self._snap_ts(start_ts), "end": self._snap_ts(end_ts),
+            "confirmed": True,
+        }
+
+    def _segments_from_summary_csv(self, path):
+        df = pd.read_csv(path)
+        segments = []
+        pool_cfg = None
+        for _, row in df.iterrows():
+            segments.append(self._segment_from_export_row(
+                row.get("stroke"), row.get("distance"),
+                row.get("pull_buoy", False), row.get("fins", False),
+                row.get("paddles", False), row.get("kickboard", False),
+                pd.to_datetime(row["start_time"]), pd.to_datetime(row["end_time"])))
+            if pool_cfg is None and "pool_length" in row and "environment" in row:
+                pool_cfg = (row["pool_length"], row["environment"])
+        segments.sort(key=lambda s: s["start"])
+        if pool_cfg is not None:
+            self._apply_pool_config(*pool_cfg)
+        return segments
+
+    def _segments_from_annotated_csv(self, path):
+        """Reconstructs segments by grouping contiguous tracked (non-blank
+        stroke) rows -- a coarser fallback than _segments_from_summary_csv,
+        since two segments with no rest between them would merge into one.
+        Only used when _segments.csv is missing but _annotated.csv isn't."""
+        df = pd.read_csv(path)
+        t = pd.to_datetime(df["Date/Time"])
+        # fillna FIRST -- a blank cell reads back as float NaN, and
+        # NaN.astype(str) is the literal string "nan", not "", which would
+        # otherwise make every untracked (rest) row look tracked
+        tracked = df["stroke"].fillna("").astype(str).str.strip() != ""
+        group_id = (tracked != tracked.shift(fill_value=False)).cumsum()
+        segments = []
+        pool_cfg = None
+        if "pool_length" in df.columns and "environment" in df.columns and len(df):
+            pool_cfg = (df["pool_length"].iloc[0], df["environment"].iloc[0])
+        # group_id is monotonically non-decreasing, so groupby preserves each
+        # block's original (chronological) row order -- block.index[0]/[-1]
+        # are POSITIONAL on the Index object, not label lookups, so this is
+        # safe even though the underlying row labels aren't 0-based per block
+        for _, block in df.loc[tracked].groupby(group_id.loc[tracked]):
+            idx = block.index
+            row0 = block.iloc[0]
+            segments.append(self._segment_from_export_row(
+                row0.get("stroke"), row0.get("distance"),
+                row0.get("pull_buoy", False), row0.get("fins", False),
+                row0.get("paddles", False), row0.get("kickboard", False),
+                t.loc[idx[0]], t.loc[idx[-1]]))
+        segments.sort(key=lambda s: s["start"])
+        if pool_cfg is not None:
+            self._apply_pool_config(*pool_cfg)
+        return segments
+
+    def _apply_pool_config(self, pool_length, environment):
+        pool_length = self._clean_str(pool_length)
+        if pool_length in POOL_LENGTH_PRESETS:
+            self.pool_length_combo.setCurrentText(pool_length)
+        elif pool_length:
+            self.pool_length_combo.setCurrentText("Other")
+            self.pool_length_other_edit.setText(pool_length)
+        environment = self._clean_str(environment)
+        if environment in ENVIRONMENT_OPTIONS:
+            self.environment_combo.setCurrentText(environment)
 
     def _prompt_load_csv(self):
         start_dir = os.path.dirname(self.csv_path) if self.csv_path else os.getcwd()
@@ -370,8 +508,9 @@ class LabelerWindow(QMainWindow):
         right.addWidget(self.outline)
 
         count_row = QHBoxLayout()
-        count_row.addWidget(QLabel(
-            "Starts with one segment; confirming the last one adds a new one."))
+        self.segment_count_label = QLabel(
+            "Starts with one segment; confirming the last one adds a new one.")
+        count_row.addWidget(self.segment_count_label)
         count_row.addStretch(1)
         self.sort_btn = QPushButton("Sort by Start")
         self.sort_btn.clicked.connect(self.sort_by_start)
@@ -468,6 +607,19 @@ class LabelerWindow(QMainWindow):
         point rather than an interpolated moment between two."""
         idx = (self.min_elapsed - minutes_value).abs().idxmin()
         return self.df["t"].iloc[idx]
+
+    def _nearest_sample_idx(self, ts):
+        """Row index of the sample closest to an absolute timestamp --
+        shared by _snap_ts, _hr_at and _nudge so there's one lookup."""
+        return (self.df["t"] - ts).abs().idxmin()
+
+    def _snap_ts(self, ts):
+        """Like _snap_to_data, but from an absolute timestamp rather than
+        a minutes-elapsed position -- used when re-loading start/end times
+        out of a previously exported CSV (see _load_existing_export),
+        where the timestamp should already be an exact sample but is
+        snapped anyway as a defensive measure."""
+        return self.df["t"].iloc[self._nearest_sample_idx(ts)]
 
     # ------------------------------------------------------- segment count --
     def _add_new_segment(self):
@@ -735,7 +887,7 @@ class LabelerWindow(QMainWindow):
 
     def _nudge(self, target, direction):
         seg = self.segments[self.active_idx]
-        current_idx = (self.df["t"] - seg[target]).abs().idxmin()
+        current_idx = self._nearest_sample_idx(seg[target])
         new_idx = current_idx + direction
         if not (0 <= new_idx < len(self.df)):
             return  # only real hard limit: no data exists beyond the recording
@@ -868,8 +1020,7 @@ class LabelerWindow(QMainWindow):
 
     # ----------------------------------------------------------- table --
     def _hr_at(self, ts):
-        idx = (self.df["t"] - ts).abs().idxmin()
-        return self.df["hr"].iloc[idx]
+        return self.df["hr"].iloc[self._nearest_sample_idx(ts)]
 
     def _segment_stats(self, t_start, t_end):
         lo, hi = min(t_start, t_end), max(t_start, t_end)
@@ -1100,20 +1251,23 @@ class LabelerWindow(QMainWindow):
                                  f"Saved {len(summary_rows)} segment(s){note}:\n{summary_path}\n{annotated_path}")
 
 
-def _default_metrics_dir():
-    """<repo>/metrics -- this script lives in <repo>/software_utils, a
-    sibling directory, since metrics/ holds only CSV data (recordings and
-    their exports), not tooling."""
-    return Path(__file__).resolve().parent.parent / "metrics"
+def _default_biometrics_dir():
+    """<repo>/biometrics/ph -- this script lives in <repo>/software_utils,
+    a sibling of biometrics/, which holds only CSV data (recordings and
+    their exports), not tooling, organized one subfolder per contributor.
+    "ph" is hardcoded as the default since it's the only one that exists
+    today; another contributor would pass their own CSV path explicitly on
+    the command line rather than relying on this auto-discovery default."""
+    return Path(__file__).resolve().parent.parent / "biometrics" / "ph"
 
 
 def _default_csv_path():
-    metrics_dir = _default_metrics_dir()
-    candidates = sorted(metrics_dir.glob("*.csv"))
+    biometrics_dir = _default_biometrics_dir()
+    candidates = sorted(biometrics_dir.glob("*.csv"))
     candidates = [c for c in candidates
                   if not (c.name.endswith("_segments.csv") or c.name.endswith("_annotated.csv"))]
     if not candidates:
-        print(f"No HR CSV found in {metrics_dir}, and none given on the command line.")
+        print(f"No HR CSV found in {biometrics_dir}, and none given on the command line.")
         sys.exit(1)
     return str(candidates[-1])
 
