@@ -28,6 +28,8 @@ This repo's commits use a **local identity** (deliberately different from the gl
 
 Authentication is via a dedicated SSH key set up specifically for this GitHub account, configured in `~/.ssh/config` for `Host github.com` — separate from any other key on this machine, no interaction needed.
 
+**A fresh clone needs one extra step before `biometrics/` is usable**: `git-crypt unlock ~/.git-crypt-keys/swim-training-biometrics.key` — until that's run, everything under `biometrics/` shows up as ciphertext, not the real files. See section 5 for why.
+
 To publish a change:
 ```bash
 cd <local clone of this repo>
@@ -61,5 +63,12 @@ Editing the file and committing the fix is **not enough** — the old version is
    ```
 4. Re-run the same `git log -S` search from step 1 — expect nothing back — before trusting it's fixed.
 5. `git push --force origin main` to overwrite what's already public.
+
+## 5. HR data: labeling, storage, and encryption
+
+- Recordings and their exports live in `biometrics/<contributor>/` (currently just `biometrics/ph/`), one subfolder per person — not `metrics/` (renamed, since this folder holds real personal health data).
+- Label a recording with `python3 software_utils/hr_labeler.py [path/to/csv]` — with no path given, it auto-opens the newest unlabeled CSV in `biometrics/ph/`. Opening a recording that already has a `_segments.csv`/`_annotated.csv` next to it reloads those confirmed segments back into the table (to fix a mislabeled one) instead of starting over.
+- Export is automatic and un-promptable by design: `Export CSV` always writes `<name>_segments.csv` and `<name>_annotated.csv` next to the recording, never a chosen name — needed for predictable batch processing later.
+- **`biometrics/` is encrypted at rest via git-crypt** (`.gitattributes`: `biometrics/** filter=git-crypt diff=git-crypt`) — plaintext in the working tree, ciphertext in git history and on GitHub. The symmetric key lives at `~/.git-crypt-keys/swim-training-biometrics.key` (outside the repo, backed up separately) — **losing it means permanently losing readable access to all encrypted history, with no recovery.** A fresh clone shows ciphertext until `git-crypt unlock ~/.git-crypt-keys/swim-training-biometrics.key` is run (see section 3).
 
 **Limit of this fix:** anyone who cloned or forked the repo before the rewrite still has the old data. A force-push only overwrites the copy on GitHub's servers, not copies that already left it.
