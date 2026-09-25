@@ -46,6 +46,10 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QColor
 from PyQt6.QtWidgets import QAbstractItemView, QApplication, QHeaderView, QTableWidget, QTableWidgetItem
 
+# swim_data.py lives one directory up (software_utils/), not next to this
+# file (software_utils/legacy/) -- this script predates that split, so add
+# the parent dir to sys.path rather than duplicating swim_data's contents.
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from swim_data import (
     find_repo_root,
     newest_json,

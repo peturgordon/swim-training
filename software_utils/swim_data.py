@@ -32,8 +32,12 @@ tail where too few gaps remain) -- the segment-gap HR recovery pipeline
 prototyped as a one-off and then promoted here once it proved out.
 
 This module has no visualization code and no CLI of its own; it's meant to be
-imported. explore_pool_swim_json.py and swim_primitives.py both import their
-loading/object-building functions from here rather than duplicating them.
+imported. The pre-object-model tools that used to own this loading/object-
+building code (explore_pool_swim_json.py, swim_primitives.py, swim_explorer.py)
+now import it from here instead of duplicating it, and live in legacy/ --
+superseded as the basis for new work, but still functional for their own
+existing output (e.g. explore_pool_swim_json.py's combined pace/HR PNGs). All
+new visualization work is meant to be built fresh on top of this module.
 """
 import json
 from pathlib import Path
