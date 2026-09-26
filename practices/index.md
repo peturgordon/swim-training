@@ -2,6 +2,7 @@
 
 Individual session plans, newest first, generated from the [training framework](../guides/training-framework.html) and logged with results after the fact.
 
+- [2026-09-26 — Race Distance (Endurance)](2026-09-26.md)
 - [2026-09-23 — Speed Bridge (Sprint)](2026-09-23.md)
 - [2026-09-21 — CSS Baseline Test](2026-09-21.md)
 - [2026-09-19 — Race Distance (Endurance)](2026-09-19.md)
