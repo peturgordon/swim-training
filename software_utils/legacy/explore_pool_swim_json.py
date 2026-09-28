@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 One-off exploration script for a HealthAutoExport "Pool Swim-*.json" export
-(Apple Watch, e.g. biometrics/ph/archives/Pool Swim-*.json) -- a different
+(Apple Watch, e.g. biometrics/ph/Pool Swim-*.json) -- a different
 shape from the "Pool Swim-Heart Rate-*.csv" files hr_labeler.py works with:
 a single JSON with laps/segments already computed on-device, not a flat
 heart-rate-only time series.
@@ -29,8 +29,9 @@ _segments.csv/_annotated.csv pipeline.
 Usage:
     python3 explore_pool_swim_json.py [path/to/Pool Swim-*.json] [--interactive]
 
-If no path is given, the newest "Pool Swim-*.json" in ../biometrics/ph/archives
-is used. --interactive/-i opens the pace plot in a live, pannable/zoomable
+If no path is given, the newest "Pool Swim-*.json" in ../biometrics/ph is used
+(archives/ is for the raw HealthAutoExport .zip files, not the exported JSON).
+--interactive/-i opens the pace plot in a live, pannable/zoomable
 matplotlib window (qtagg backend, via PyQt6, already a project dependency)
 instead of just saving a PNG -- it still saves the PNG too.
 
@@ -346,7 +347,7 @@ def main() -> None:
         json_path = Path(args.json_path).expanduser()
     else:
         repo_root = find_repo_root(Path.cwd())
-        json_path = newest_json(repo_root / "biometrics" / "ph" / "archives")
+        json_path = newest_json(repo_root / "biometrics" / "ph")
 
     workout = load_workout(json_path)
     laps = intervals_to_df(workout["laps"])

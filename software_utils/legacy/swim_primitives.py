@@ -18,8 +18,8 @@ combine these three into derived metrics (pace, true lap duration, etc.).
 Usage:
     python3 swim_primitives.py [path/to/Pool Swim-*.json]
 
-If no path is given, the newest "Pool Swim-*.json" in ../biometrics/ph/archives is
-used.
+If no path is given, the newest "Pool Swim-*.json" in ../biometrics/ph is used
+(archives/ is for the raw HealthAutoExport .zip files, not the exported JSON).
 
 Requires: pandas, matplotlib, PyQt6 (for the qtagg interactive backend)
 """
@@ -191,7 +191,7 @@ def main() -> None:
         repo_root = find_repo_root(json_path)
     else:
         repo_root = find_repo_root(Path.cwd())
-        json_path = newest_json(repo_root / "biometrics" / "ph" / "archives")
+        json_path = newest_json(repo_root / "biometrics" / "ph")
 
     workout = load_workout(json_path)
     laps = intervals_to_df(workout["laps"])
