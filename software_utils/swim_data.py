@@ -25,11 +25,19 @@ Foundational data structures for a HealthAutoExport "Pool Swim-*.json" export
 Plus the raw heartRateData timeseries itself (heart_rate_df) -- the fourth
 thing later work builds on.
 
+lap_pace: every lap's own elapsed_s converted to a pace (seconds per a chosen
+target distance -- per length, per 50m, per 100m, etc.) using the watch's own
+lapLength -- like segment_table's distance_m, laps carry no pace field of
+their own, so this is derived, not read.
+
 Built on top of Object 3: segment_gap_recovery_curves (filter by duration,
 re-reference each gap at its own peak HR, interpolate onto a common grid) and
 aggregate_recovery_curves (stack, reduce to n/mean/std/min/max, truncate the
 tail where too few gaps remain) -- the segment-gap HR recovery pipeline
-prototyped as a one-off and then promoted here once it proved out.
+prototyped as a one-off and then promoted here once it proved out. On top of
+that: recovery_hrr, a single-value heart-rate-recovery metric (HRR30/HRR60
+are the common named cases) read off aggregate_recovery_curves' own mean
+column at a given number of seconds since peak.
 
 This module has no visualization code and no CLI of its own; it's meant to be
 imported. The pre-object-model tools that used to own this loading/object-
@@ -114,6 +122,23 @@ def tag_lap_segments(laps: pd.DataFrame, segments: pd.DataFrame) -> pd.DataFrame
         laps.loc[in_range, "seg_idx"] = seg["index"]
         laps.loc[in_range, "seg_laps"] = in_range.sum()
     return laps
+
+
+def lap_pace(laps: pd.DataFrame, lap_length_m: float, target_distance_m: float) -> pd.DataFrame:
+    """Every existing per-lap column, unchanged, plus one derived column --
+    pace_s -- built from that lap's own elapsed_s (raw elapsedDuration) and
+    the watch's own lapLength, normalized to pace-per-target_distance_m:
+    pace = elapsed_s * (target_distance_m / lap_length_m). Passing
+    target_distance_m == lap_length_m gives pace per length unchanged (pace_s
+    == elapsed_s exactly); 50 or 100 give the standard swim pace-per-50m/100m
+    conventions regardless of the pool's actual length. Laps carry no pace
+    field of their own in the JSON -- like segment_table's distance_m, this
+    is the only way to get one. Only needs elapsed_s to be present, so it
+    works on either plain laps (intervals_to_df's output) or Object 1
+    (tag_lap_segments' output, if seg_idx is wanted alongside pace too)."""
+    table = laps.copy()
+    table["pace_s"] = table["elapsed_s"] * (target_distance_m / lap_length_m)
+    return table
 
 
 def segment_table(laps_tagged: pd.DataFrame, segments: pd.DataFrame, lap_length_m: float) -> pd.DataFrame:
@@ -246,3 +271,22 @@ def aggregate_recovery_curves(curves: pd.DataFrame, min_n: int | None = 3) -> pd
     if min_n is not None:
         summary = summary[summary["n"] >= min_n]
     return summary
+
+
+def recovery_hrr(summary: pd.DataFrame, t: float) -> float | None:
+    """HRR_t (heart rate recovery at t seconds since peak): the average drop
+    from peak to t seconds later, read off aggregate_recovery_curves' own
+    "mean" column at the grid point nearest t. That column is already HR
+    relative to each gap's own peak (0 at t=0, negative afterward), so HRR_t
+    is just its negation -- a positive number, larger meaning more recovery.
+    HRR30/HRR60 (t=30/60) are the commonly-named cases in the literature
+    (e.g. Cole et al. 1999's 1-minute HRR), but this isn't restricted to
+    those two.
+
+    Returns None -- rather than extrapolating a value nothing actually
+    observed -- if t falls outside summary's own index: beyond the longest
+    surviving gap, or truncated away by aggregate_recovery_curves' min_n."""
+    if summary.empty or t > summary.index.max() or t < summary.index.min():
+        return None
+    nearest_t = summary.index[np.argmin(np.abs(summary.index - t))]
+    return -summary.loc[nearest_t, "mean"]
