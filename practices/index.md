@@ -2,6 +2,7 @@
 
 Individual session plans, newest first, generated from the [training framework](../guides/training-framework.html) and logged with results after the fact.
 
+- [2026-10-03 — Race Distance (Endurance), short-rep version](2026-10-03.md)
 - [2026-10-01 — Interval Set (logged as swum)](2026-10-01.md)
 - [2026-09-28 — Technique + Aerobic Base](2026-09-28.md)
 - [2026-09-26 — Race Distance (Endurance)](2026-09-26.md)
